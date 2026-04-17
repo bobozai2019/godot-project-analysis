@@ -1,32 +1,50 @@
 # Godot Project Analysis Powerup
 
-面向 Codex 的 Godot 项目静态分析与架构恢复 skill pack。
+English | [简体中文](README.zh-CN.md)
 
-这个项目把 Godot 项目分析拆成 Layer 0 到 Layer 4 五个独立 skill，并额外提供一个总调度 skill `godot-project-analysis`。用户安装后，可以在 Codex 里用一句话驱动完整分析流程，也可以按层单独重跑解析、图构建、语义分析或架构报告。
+A Codex skill pack for static Godot project analysis and architecture recovery.
 
-## 目标
+This repository packages a layered Godot analysis harness as Codex skills. It can inventory a Godot project, parse scenes and scripts, build a relationship graph, derive neutral semantic systems, and generate evidence-backed architecture reports.
 
-本项目用于帮助 Codex 对 Godot 4.x 项目做可追溯的静态分析，输出面向人类阅读的架构恢复报告。
+The default user entry point is the orchestrator skill:
 
-它重点解决几个问题：
+```text
+godot-project-analysis
+```
 
-- 快速盘点 Godot 项目的场景、脚本、资源、autoload、输入动作和依赖关系。
-- 把 `.tscn`、`.gd`、`project.godot` 等静态事实整理成统一关系图。
-- 在不污染前置层的前提下识别 UI、Gameplay、Manager、Data、Core 等系统结构。
-- 在 Layer 4 基于证据恢复项目身份、玩家主循环、玩家控制方式、核心模块职责、风险和建议。
-- 让 Codex 可以通过 skill 自动选择正确流程，而不是每次手工拼命令。
+After installation, a user can ask Codex:
 
-## 当前架构
+```text
+Use godot-project-analysis to analyze D:\godot\project\my-game
+```
 
-项目由 6 个 skill 组成：
+Codex will load the orchestrator skill and drive the Layer 0-Layer 4 pipeline.
+
+## Goals
+
+This project helps Codex analyze Godot 4.x projects in a layered, traceable way.
+
+It is designed to:
+
+- Inventory scenes, scripts, resources, autoloads, input actions, and dependencies.
+- Normalize `.tscn`, `.gd`, `.tres`, `.res`, and `project.godot` facts into structured artifacts.
+- Build a graph of scenes, nodes, scripts, resources, signals, and project-level relationships.
+- Identify neutral systems such as UI, Gameplay, Data, Physics, Presentation, Manager, and Core.
+- Keep Layer 1-Layer 3 domain-neutral.
+- Allow only Layer 4 to perform domain or genre inference.
+- Generate human-readable architecture reports with evidence-backed findings, risks, and recommendations.
+- Let Codex trigger the correct workflow from a single skill name.
+
+## Repository Layout
 
 ```text
 godot-project-analysis-powerup/
+  README.md
+  README.zh-CN.md
   install.ps1
   install.sh
-  README.md
 
-  godot-project-analysis/          # 总调度入口 skill
+  godot-project-analysis/          # Orchestrator skill
   godot-analysis-foundation/       # Layer 0
   godot-analysis-parser/           # Layer 1
   godot-analysis-graph/            # Layer 2
@@ -34,42 +52,61 @@ godot-project-analysis-powerup/
   godot-analysis-architecture/     # Layer 4
 
   configs/
-    layer4_profiles/               # 开发态 profile 配置
+    layer4_profiles/               # Development-time Layer 4 profiles
 
-  analysis/                        # 本地分析输出示例和测试结果
-  docs/                            # 开发计划和整改记录
+  analysis/                        # Local analysis outputs and regression samples
+  docs/                            # Development plans and remediation notes
 ```
 
-### 为什么是 5 个 Layer skill + 1 个总调度 skill
+## Architecture
 
-五个 Layer skill 保持独立，是为了让每一层职责清晰、可单独验证、可单独升级。
+The pack contains five layer skills plus one orchestration skill.
 
-`godot-project-analysis` 是用户入口，负责把五层串起来。用户通常只需要触发这个入口 skill；只有在调试或局部重跑时，才需要直接使用某一个 Layer skill。
+```text
+godot-project-analysis
+  coordinates:
+    godot-analysis-foundation
+    godot-analysis-parser
+    godot-analysis-graph
+    godot-analysis-semantic
+    godot-analysis-architecture
+```
 
-这样的结构有几个好处：
+The five layer skills remain independent so each layer can be tested, upgraded, and rerun separately. The orchestrator skill exists for user experience: most users should only need to remember `godot-project-analysis`.
 
-- 用户使用简单：只记 `godot-project-analysis`。
-- 开发维护稳定：Layer 1 到 Layer 3 可以保持领域中立，Layer 4 单独负责领域推断。
-- 上下文更小：Codex 只在需要时读取对应 skill。
-- 回归风险可控：某层改动可以只跑对应层测试和下游验证。
+## Data Flow
 
-## 分层说明
+```mermaid
+flowchart TD
+  A[Godot Project] --> B[Layer 1 Parser]
+  L0[Layer 0 Foundation] --> B
+  B --> C[Layer 2 Graph Builder]
+  L0 --> D[Layer 3 Semantic Analyzer]
+  C --> D
+  C --> E[Layer 4 Architecture Recovery]
+  D --> E
+  P[Layer 4 Profiles] --> E
+  E --> R[Architecture Report]
+  E --> J[JSON Artifacts]
+```
+
+## Layer Overview
 
 ### Layer 0: Foundation
 
-目录：
+Skill:
 
 ```text
-godot-analysis-foundation/
+godot-analysis-foundation
 ```
 
-职责：
+Purpose:
 
-- 提供 Godot 4.x 类、API、节点角色、系统类别和模式规则的基础语义。
-- 生成或复用标准 foundation artifacts。
-- 不分析具体项目。
+- Provides reusable Godot 4.x semantic foundation data.
+- Defines class/API semantics, roles, systems, and pattern rules.
+- Does not analyze a concrete project.
 
-主要输出：
+Main outputs:
 
 ```text
 foundation_semantics.json
@@ -79,14 +116,7 @@ role_taxonomy.json
 foundation_build_report.md
 ```
 
-常用命令：
-
-```powershell
-python "$env:USERPROFILE\.codex\skills\godot-analysis-foundation\scripts\build_foundation.py" --output analysis\layer0
-python "$env:USERPROFILE\.codex\skills\godot-analysis-foundation\scripts\validate_foundation.py" --input analysis\layer0
-```
-
-通常情况下不需要每次重建 Layer 0。默认 foundation 已经打包在：
+Layer 0 also ships a default foundation in:
 
 ```text
 godot-analysis-foundation/assets/default-layer0/
@@ -94,20 +124,20 @@ godot-analysis-foundation/assets/default-layer0/
 
 ### Layer 1: Parser
 
-目录：
+Skill:
 
 ```text
-godot-analysis-parser/
+godot-analysis-parser
 ```
 
-职责：
+Purpose:
 
-- 解析具体 Godot 项目的静态事实。
-- 读取 `project.godot`、`.tscn`、`.gd`、`.tres`、`.res`。
-- 提取入口场景、场景树、脚本信息、autoload、输入动作、资源引用、信号连接、依赖关系。
-- 保持事实层，不做架构判断。
+- Extracts static facts from a concrete Godot project.
+- Parses `project.godot`, `.tscn`, `.gd`, `.tres`, and `.res`.
+- Extracts entry scenes, scene trees, scripts, resources, autoloads, input actions, signals, and dependencies.
+- Does not infer architecture.
 
-主要输出：
+Main outputs:
 
 ```text
 project_inventory.json
@@ -117,35 +147,22 @@ dependency_extract.json
 parser_report.md
 ```
 
-常用命令：
-
-```powershell
-python "$env:USERPROFILE\.codex\skills\godot-analysis-parser\scripts\parse_godot_project.py" `
-  --project "D:\godot\project\my-game" `
-  --output analysis\my_game\layer1 `
-  --layer0 analysis\my_game\layer0 `
-  --resource-mode referenced
-
-python "$env:USERPROFILE\.codex\skills\godot-analysis-parser\scripts\validate_layer1.py" `
-  --input analysis\my_game\layer1
-```
-
 ### Layer 2: Graph
 
-目录：
+Skill:
 
 ```text
-godot-analysis-graph/
+godot-analysis-graph
 ```
 
-职责：
+Purpose:
 
-- 基于 Layer 1 的静态事实构建统一关系图。
-- 标准化 Scene、Node、Script、Resource、Signal、Autoload、Project 等节点。
-- 标准化 contains、attaches、instantiates、references、connects、emits、transitions_to 等边。
-- 显式保留 unresolved 边，不静默吞掉问题。
+- Builds a normalized relationship graph from Layer 1 artifacts.
+- Emits nodes such as Scene, Node, Script, Resource, Signal, Autoload, Project, and Unknown.
+- Emits edges such as contains, attaches, instantiates, references, connects, emits, transitions_to, and defines_signal.
+- Preserves unresolved relationships explicitly.
 
-主要输出：
+Main outputs:
 
 ```text
 input_readiness.json
@@ -156,39 +173,22 @@ graph_stats.json
 graph_build_report.md
 ```
 
-常用命令：
-
-```powershell
-python "$env:USERPROFILE\.codex\skills\godot-analysis-graph\scripts\preflight_layer2.py" `
-  --layer0 analysis\my_game\layer0 `
-  --layer1 analysis\my_game\layer1 `
-  --output-json analysis\my_game\layer2\input_readiness.json `
-  --output-md analysis\my_game\layer2\input_readiness_report.md
-
-python "$env:USERPROFILE\.codex\skills\godot-analysis-graph\scripts\build_graph.py" `
-  --layer1 analysis\my_game\layer1 `
-  --output analysis\my_game\layer2
-
-python "$env:USERPROFILE\.codex\skills\godot-analysis-graph\scripts\validate_graph.py" `
-  --input analysis\my_game\layer2
-```
-
 ### Layer 3: Semantic
 
-目录：
+Skill:
 
 ```text
-godot-analysis-semantic/
+godot-analysis-semantic
 ```
 
-职责：
+Purpose:
 
-- 基于 Layer 0 和 Layer 2 做中立语义分析。
-- 标注实体的系统类别、语义角色、模式匹配和置信度。
-- 可暴露原始领域词、命名 token 和事实证据，但不做领域候选和领域判断。
-- 为 Layer 4 提供系统聚类和语义证据。
+- Interprets the Layer 2 graph using Layer 0 foundation rules.
+- Produces neutral semantic annotations, systems, pattern matches, and findings.
+- May expose raw names, tokens, and evidence.
+- Must not make domain or genre decisions.
 
-主要输出：
+Main outputs:
 
 ```text
 semantic_annotations.json
@@ -198,35 +198,22 @@ semantic_findings.json
 semantic_report.md
 ```
 
-常用命令：
-
-```powershell
-python "$env:USERPROFILE\.codex\skills\godot-analysis-semantic\scripts\analyze_semantics.py" `
-  --layer0 analysis\my_game\layer0 `
-  --layer2 analysis\my_game\layer2 `
-  --output analysis\my_game\layer3
-
-python "$env:USERPROFILE\.codex\skills\godot-analysis-semantic\scripts\validate_semantics.py" `
-  --input analysis\my_game\layer3 `
-  --layer0 analysis\my_game\layer0
-```
-
 ### Layer 4: Architecture
 
-目录：
+Skill:
 
 ```text
-godot-analysis-architecture/
+godot-analysis-architecture
 ```
 
-职责：
+Purpose:
 
-- 基于 Layer 2 图和 Layer 3 语义结果恢复项目架构。
-- 生成面向人类阅读的中文架构报告。
-- 推断项目身份、玩家主循环、玩家控制方式、核心玩法逻辑、模块职责、场景流程、风险和建议。
-- 这是唯一允许做领域推断的层。
+- Recovers architecture from Layer 2 and Layer 3 artifacts.
+- Produces the final human-readable architecture report.
+- Infers project identity, player loop, player controls, core gameplay logic, module responsibilities, scene flow, risks, and recommendations.
+- This is the only layer allowed to perform domain or genre inference.
 
-主要输出：
+Main outputs:
 
 ```text
 architecture_summary.json
@@ -240,71 +227,58 @@ gameplay_loop.json
 module_responsibilities.json
 ```
 
-Layer 4 内置多 profile 配置：
+Layer 4 profiles are bundled in:
 
 ```text
 godot-analysis-architecture/assets/layer4_profiles/
 ```
 
-这些 profile 用于泛化的项目身份识别，例如 card、rpg、tactical、survival、management、story、sandbox 等。它们不应该写进 Layer 1 到 Layer 3。
-
-常用命令：
-
-```powershell
-python "$env:USERPROFILE\.codex\skills\godot-analysis-architecture\scripts\recover_architecture.py" `
-  --layer2 analysis\my_game\layer2 `
-  --layer3 analysis\my_game\layer3 `
-  --output analysis\my_game\layer4 `
-  --profile-dir "$env:USERPROFILE\.codex\skills\godot-analysis-architecture\assets\layer4_profiles"
-
-python "$env:USERPROFILE\.codex\skills\godot-analysis-architecture\scripts\validate_architecture.py" `
-  --input analysis\my_game\layer4
-
-python "$env:USERPROFILE\.codex\skills\godot-analysis-architecture\scripts\quality_gate_architecture.py" `
-  --layer3 analysis\my_game\layer3 `
-  --layer4 analysis\my_game\layer4
-```
-
-### Godot Project Analysis Orchestrator
-
-目录：
+Development copies are also kept in:
 
 ```text
-godot-project-analysis/
+configs/layer4_profiles/
 ```
 
-职责：
+### Orchestrator: Godot Project Analysis
 
-- 作为用户面对 Codex 时的统一入口。
-- 自动定位五个 Layer skill。
-- 自动按顺序执行 Layer 0 到 Layer 4。
-- 支持从指定层开始重跑。
-- 自动使用 Layer 4 内置 profile。
-- 自动执行每层 validation 和 Layer 4 quality gate。
+Skill:
 
-入口脚本：
+```text
+godot-project-analysis
+```
+
+Purpose:
+
+- Acts as the user-facing entry point.
+- Locates sibling layer skills.
+- Runs Layer 0-Layer 4 in order.
+- Supports rerunning from a selected layer.
+- Uses bundled Layer 4 profiles automatically.
+- Runs validation and the Layer 4 quality gate.
+
+Main script:
 
 ```text
 godot-project-analysis/scripts/run_full_analysis.py
 ```
 
-## 安装
+## Installation
 
 ### Windows
 
-在项目根目录执行：
+Run from the repository root:
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File .\install.ps1
 ```
 
-默认安装到：
+By default, skills are installed to:
 
 ```text
 C:\Users\<user>\.codex\skills
 ```
 
-如果设置了 `CODEX_HOME`，则安装到：
+If `CODEX_HOME` is set, skills are installed to:
 
 ```text
 $CODEX_HOME\skills
@@ -312,69 +286,77 @@ $CODEX_HOME\skills
 
 ### Linux / macOS
 
-在项目根目录执行：
+Run from the repository root:
 
 ```bash
 chmod +x ./install.sh
 ./install.sh
 ```
 
-默认安装到：
+By default, skills are installed to:
 
 ```text
 ~/.codex/skills
 ```
 
-如果设置了 `CODEX_HOME`，则安装到：
+If `CODEX_HOME` is set, skills are installed to:
 
 ```text
 $CODEX_HOME/skills
 ```
 
-## 在 Codex 中触发
+## Using It From Codex
 
-安装后，最推荐的方式是在 Codex 对话里直接说：
+After installation, ask Codex:
 
 ```text
-用 godot-project-analysis 分析 D:\godot\project\my-game
+Use godot-project-analysis to analyze D:\godot\project\my-game
 ```
 
-或者：
+Other examples:
 
 ```text
-用 godot-project-analysis 分析 D:\godot\WarCanvas-master
-```
-
-Codex 会根据 skill 名称自动加载 `godot-project-analysis`，再由它协调五层分析。
-
-也可以触发单层 skill：
-
-```text
-用 godot-analysis-parser 解析 D:\godot\project\my-game
+Use godot-project-analysis to analyze D:\godot\WarCanvas-master
 ```
 
 ```text
-用 godot-analysis-architecture 基于已有 layer2 和 layer3 重跑架构报告
+Use godot-project-analysis to analyze D:\godot\game\Slay.the.Spire.2.Early.Access
 ```
 
-一般用户只需要使用 `godot-project-analysis`。单层 skill 更适合开发、调试和回归验证。
+To rerun only the final architecture layer:
 
-## 命令行使用
+```text
+Use godot-project-analysis to rerun Layer 4 for analysis\my_game
+```
 
-### 完整分析
+To use a single layer directly:
+
+```text
+Use godot-analysis-parser to parse D:\godot\project\my-game
+```
+
+```text
+Use godot-analysis-architecture to rebuild the architecture report from existing Layer 2 and Layer 3 artifacts
+```
+
+For normal users, prefer `godot-project-analysis`. Direct layer skills are mostly useful for development, debugging, and regression checks.
+
+## Command Line Usage
+
+### Full Pipeline
 
 ```powershell
 python "$env:USERPROFILE\.codex\skills\godot-project-analysis\scripts\run_full_analysis.py" `
   --project "D:\godot\project\my-game"
 ```
 
-默认输出：
+Default output:
 
 ```text
 analysis/<project_slug>/
 ```
 
-### 指定输出目录
+### Custom Output Directory
 
 ```powershell
 python "$env:USERPROFILE\.codex\skills\godot-project-analysis\scripts\run_full_analysis.py" `
@@ -382,9 +364,9 @@ python "$env:USERPROFILE\.codex\skills\godot-project-analysis\scripts\run_full_a
   --output "analysis\my_game"
 ```
 
-### 从某一层开始重跑
+### Rerun From a Layer
 
-完整重跑：
+Full rerun:
 
 ```powershell
 python "$env:USERPROFILE\.codex\skills\godot-project-analysis\scripts\run_full_analysis.py" `
@@ -393,7 +375,7 @@ python "$env:USERPROFILE\.codex\skills\godot-project-analysis\scripts\run_full_a
   --start-layer 0
 ```
 
-只重跑 Layer 1 到 Layer 4：
+Reparse and rebuild downstream layers:
 
 ```powershell
 python "$env:USERPROFILE\.codex\skills\godot-project-analysis\scripts\run_full_analysis.py" `
@@ -402,7 +384,7 @@ python "$env:USERPROFILE\.codex\skills\godot-project-analysis\scripts\run_full_a
   --start-layer 1
 ```
 
-只重跑 Layer 4：
+Rebuild only Layer 4:
 
 ```powershell
 python "$env:USERPROFILE\.codex\skills\godot-project-analysis\scripts\run_full_analysis.py" `
@@ -411,29 +393,29 @@ python "$env:USERPROFILE\.codex\skills\godot-project-analysis\scripts\run_full_a
   --start-layer 4
 ```
 
-`--start-layer 4` 要求已有：
+`--start-layer 4` requires existing Layer 2 and Layer 3 artifacts:
 
 ```text
 analysis/my_game/layer2/
 analysis/my_game/layer3/
 ```
 
-### 常用参数
+### Useful Options
 
 ```text
---project          Godot 项目根目录，必须包含 project.godot
---output           输出目录，默认 analysis/<project_slug>
---start-layer      从哪一层开始执行，0 到 4
---profile-dir      自定义 Layer 4 profile 目录
---exclude-addons   Layer 1 解析时排除 res://addons
---resource-mode    referenced 或 all
---rebuild-layer0   强制重建 Layer 0
---skip-validation  跳过每层 validation，不推荐常规使用
+--project          Godot project root containing project.godot
+--output           Output directory, defaults to analysis/<project_slug>
+--start-layer      First layer to run, 0 through 4
+--profile-dir      Custom Layer 4 profile directory
+--exclude-addons   Exclude res://addons during Layer 1 parsing
+--resource-mode    referenced or all
+--rebuild-layer0   Force Layer 0 regeneration
+--skip-validation  Skip validation steps
 ```
 
-## 输出目录
+## Output Layout
 
-默认输出结构：
+Default output layout:
 
 ```text
 analysis/<project_slug>/
@@ -478,64 +460,48 @@ analysis/<project_slug>/
     module_responsibilities.json
 ```
 
-其中最常看的文件是：
+The primary human-readable report is:
 
 ```text
 analysis/<project_slug>/layer4/architecture_report.md
 ```
 
-## 数据流
+## Layer Boundary Rules
 
-```mermaid
-flowchart TD
-  A[Godot Project] --> B[Layer 1 Parser]
-  L0[Layer 0 Foundation] --> B
-  B --> C[Layer 2 Graph Builder]
-  L0 --> D[Layer 3 Semantic Analyzer]
-  C --> D
-  C --> E[Layer 4 Architecture Recovery]
-  D --> E
-  P[Layer 4 Profiles] --> E
-  E --> R[Architecture Report]
-  E --> J[JSON Artifacts]
-```
-
-## 分层边界原则
-
-这个项目最重要的设计约束是：
+The core design rule is:
 
 ```text
-Layer 1 到 Layer 3 保持领域中立。
-只有 Layer 4 可以做领域推断。
+Layer 1-Layer 3 stay domain-neutral.
+Only Layer 4 performs domain inference.
 ```
 
-具体含义：
+In practice:
 
-- Layer 1 可以提取文件名、类名、函数名、资源路径、输入动作等原始事实。
-- Layer 2 可以把这些事实变成图节点和边。
-- Layer 3 可以识别 UI、Gameplay、Manager、Data 等中立系统，也可以保留领域词 token。
-- Layer 3 不应该输出“这是卡牌游戏”“这是战术策略游戏”这类领域判断。
-- Layer 4 可以基于 profile 和证据做项目身份、玩家主循环、玩法模块的推断。
+- Layer 1 may extract names, paths, functions, input actions, resources, and dependencies.
+- Layer 2 may normalize those facts into graph nodes and edges.
+- Layer 3 may classify neutral systems and preserve raw domain tokens as evidence.
+- Layer 3 must not decide that a project is a card game, RPG, tactical game, survival game, and so on.
+- Layer 4 may infer project identity and gameplay structure when profile-backed evidence supports it.
 
-这个约束可以避免前置层被某类游戏污染，也能让 Layer 4 的 profile 机制独立演进。
+This keeps early layers reusable across Godot projects and makes domain reasoning easier to evolve independently.
 
-## Profile 配置
+## Layer 4 Profiles
 
-开发态 profile 位于：
+Layer 4 profiles describe portable evidence patterns for broad project identities and modifiers.
 
-```text
-configs/layer4_profiles/
-```
-
-安装态 profile 会被打包到：
+Bundled install-time profiles:
 
 ```text
 godot-analysis-architecture/assets/layer4_profiles/
 ```
 
-安装脚本会把这些 assets 一起复制到 Codex skills 目录。
+Development-time profile copies:
 
-当前 profile 示例：
+```text
+configs/layer4_profiles/
+```
+
+Current profile examples:
 
 ```text
 action.json
@@ -560,18 +526,18 @@ survival.json
 tactical.json
 ```
 
-新增 profile 时建议遵守：
+Profile guidance:
 
-- 不针对单个具体项目硬编码。
-- 不把某个游戏样例当成验收标准。
-- 使用证据规则、权重、required features 和 loop templates 描述可迁移的领域模式。
-- 修改后至少用多个不同类型项目做回归验证。
+- Do not hard-code a single project.
+- Do not tune acceptance criteria around one or two sample games.
+- Use portable evidence rules, weights, required features, and loop templates.
+- Validate changes against multiple project styles.
 
-## 验证和质量门
+## Validation
 
-每层都有自己的 validation。
+The orchestrator runs validation after each layer by default.
 
-常规完整流程会自动执行：
+Validation steps:
 
 ```text
 Layer 0 validate_foundation.py
@@ -582,41 +548,39 @@ Layer 4 validate_architecture.py
 Layer 4 quality_gate_architecture.py
 ```
 
-如果你在开发某层，可以单独运行对应测试。
-
-Layer 4 相关测试：
+Layer 4 tests:
 
 ```powershell
 python godot-analysis-architecture\scripts\test_layer4_profiles.py
 python godot-analysis-architecture\scripts\test_architecture_recovery.py
 ```
 
-Parser 测试：
+Parser tests:
 
 ```powershell
 python godot-analysis-parser\scripts\test_parse_godot_project.py
 ```
 
-Graph 测试：
+Graph tests:
 
 ```powershell
 python godot-analysis-graph\scripts\test_build_graph.py
 ```
 
-Semantic 测试：
+Semantic tests:
 
 ```powershell
 python godot-analysis-semantic\scripts\test_semantic_analyzer.py
 ```
 
-## 推荐开发流程
+## Development Workflow
 
-### 修改 Layer 1
+### Updating Layer 1
 
-1. 修改 parser。
-2. 跑 parser 单元测试。
-3. 用至少一个真实项目重跑 Layer 1。
-4. 从 Layer 2 开始跑下游验证。
+1. Modify parser behavior.
+2. Run parser tests.
+3. Re-run from Layer 1 on at least one real project.
+4. Confirm downstream Layer 2-Layer 4 validation still passes.
 
 ```powershell
 python "$env:USERPROFILE\.codex\skills\godot-project-analysis\scripts\run_full_analysis.py" `
@@ -625,12 +589,12 @@ python "$env:USERPROFILE\.codex\skills\godot-project-analysis\scripts\run_full_a
   --start-layer 1
 ```
 
-### 修改 Layer 2
+### Updating Layer 2
 
-1. 修改 graph builder 或 preflight。
-2. 跑 graph 测试。
-3. 从 Layer 2 开始重跑。
-4. 检查 unresolved、graph stats 和 Layer 3/Layer 4 是否仍通过。
+1. Modify graph or preflight behavior.
+2. Run graph tests.
+3. Re-run from Layer 2.
+4. Check unresolved edges, graph stats, and downstream quality.
 
 ```powershell
 python "$env:USERPROFILE\.codex\skills\godot-project-analysis\scripts\run_full_analysis.py" `
@@ -639,12 +603,12 @@ python "$env:USERPROFILE\.codex\skills\godot-project-analysis\scripts\run_full_a
   --start-layer 2
 ```
 
-### 修改 Layer 3
+### Updating Layer 3
 
-1. 确认没有引入领域判断。
-2. 跑 semantic 测试。
-3. 从 Layer 3 开始重跑。
-4. 检查 Layer 4 报告是否更稳定，而不是更武断。
+1. Ensure the change does not add domain judgment.
+2. Run semantic tests.
+3. Re-run from Layer 3.
+4. Check that Layer 4 reports become more evidence-backed, not more speculative.
 
 ```powershell
 python "$env:USERPROFILE\.codex\skills\godot-project-analysis\scripts\run_full_analysis.py" `
@@ -653,12 +617,12 @@ python "$env:USERPROFILE\.codex\skills\godot-project-analysis\scripts\run_full_a
   --start-layer 3
 ```
 
-### 修改 Layer 4 或 profiles
+### Updating Layer 4 or Profiles
 
-1. 修改 architecture 脚本或 profile。
-2. 跑 Layer 4 单元测试。
-3. 至少用多个不同项目只重跑 Layer 4。
-4. 检查 `profile_evaluation.json`、`project_identity.json` 和 `architecture_report.md`。
+1. Modify the architecture script or profile JSON.
+2. Run Layer 4 tests.
+3. Re-run Layer 4 across multiple projects.
+4. Review `profile_evaluation.json`, `project_identity.json`, and `architecture_report.md`.
 
 ```powershell
 python "$env:USERPROFILE\.codex\skills\godot-project-analysis\scripts\run_full_analysis.py" `
@@ -667,83 +631,75 @@ python "$env:USERPROFILE\.codex\skills\godot-project-analysis\scripts\run_full_a
   --start-layer 4
 ```
 
-## 常见问题
+## Troubleshooting
 
-### Codex 没有自动触发 skill
+### Codex Does Not Trigger the Skill
 
-在请求里明确写 skill 名：
+Mention the skill name explicitly:
 
 ```text
-用 godot-project-analysis 分析 D:\godot\project\my-game
+Use godot-project-analysis to analyze D:\godot\project\my-game
 ```
 
-如果仍未触发，检查是否安装到了正确目录：
+Then check that the installed file exists:
 
 ```text
 C:\Users\<user>\.codex\skills\godot-project-analysis\SKILL.md
 ```
 
-### 报错找不到 project.godot
+### Missing `project.godot`
 
-`--project` 必须指向 Godot 项目根目录，而不是某个子目录。
+`--project` must point to the Godot project root, not a child directory.
 
-正确：
-
-```text
-D:\godot\project\my-game
-```
-
-该目录下应存在：
+Expected:
 
 ```text
 D:\godot\project\my-game\project.godot
 ```
 
-### 只想更新最终报告
+### Only the Final Report Needs Updating
 
-如果 Layer 2 和 Layer 3 已经存在，可以只重跑 Layer 4：
+Use:
 
 ```powershell
-python "$env:USERPROFILE\.codex\skills\godot-project-analysis\scripts\run_full_analysis.py" `
-  --project "D:\godot\project\my-game" `
-  --output "analysis\my_game" `
-  --start-layer 4
+--start-layer 4
 ```
 
-### Mermaid 图在 Markdown 里显示成文本
+This is useful after changing Layer 4 reporting logic or profile JSON.
 
-这通常不是报告生成问题，而是 Markdown 预览器不支持 Mermaid。
+### Mermaid Diagrams Render as Text
 
-在 VS Code 中可以安装支持 Mermaid 的 Markdown 插件，或者使用 GitHub/GitLab 等支持 Mermaid 的渲染环境查看。
+This is usually a Markdown preview limitation, not a report-generation issue.
 
-### 是否可以跳过 validation
+Use a Mermaid-capable Markdown renderer such as GitHub, GitLab, or a VS Code Markdown preview extension with Mermaid support.
 
-可以使用：
+### Skipping Validation
+
+You can pass:
 
 ```powershell
 --skip-validation
 ```
 
-但不建议常规使用。这个项目的核心价值之一就是每层都可验证，跳过 validation 会降低报告可信度。
+This is not recommended for normal usage. Validation is part of the trust model for this project.
 
-## 当前状态
+## Current Status
 
-当前项目已经具备：
+The project currently provides:
 
-- 五层独立 skill。
-- 一个总调度 skill。
-- Windows 和 Unix 安装脚本。
-- Layer4 多 profile 推断能力。
-- Layer4 profile assets 打包。
-- 完整流水线脚本。
-- 按层重跑能力。
-- 每层 validation 和 Layer4 quality gate。
+- Five independent layer skills.
+- One orchestrator skill.
+- Windows and Unix installation scripts.
+- Layer 4 multi-profile inference.
+- Bundled Layer 4 profile assets.
+- Full pipeline orchestration.
+- Rerun support from any layer.
+- Layer-level validation and a Layer 4 quality gate.
 
-后续扩展重点建议放在：
+Recommended future work:
 
-- 增强 Layer 1 对更多 Godot 资源格式和动态加载模式的解析。
-- 增强 Layer 2 图查询能力和 unresolved 解释。
-- 保持 Layer 3 中立语义稳定。
-- 扩展 Layer 4 profiles，但避免为单个项目硬编码。
-- 增加更多跨项目回归样例。
-
+- Improve Layer 1 coverage for more Godot resource formats and dynamic load patterns.
+- Improve Layer 2 unresolved-edge diagnostics.
+- Keep Layer 3 neutral and stable.
+- Expand Layer 4 profiles without project-specific hard-coding.
+- Add more cross-project regression samples.
