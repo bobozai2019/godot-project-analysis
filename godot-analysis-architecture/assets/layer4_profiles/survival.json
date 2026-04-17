@@ -1,0 +1,201 @@
+{
+  "schema_version": "layer4_profile.v2",
+  "profile_id": "survival",
+  "profile_layer": "modifier",
+  "display_name": "Survival",
+  "identity_rules": {
+    "survival": {
+      "threshold": 0.45,
+      "summary": "以生存状态、采集、制作和基地扩张为核心的生存特征。",
+      "secondary_types": [
+        "resource_pressure",
+        "crafting",
+        "base_building"
+      ],
+      "feature_weights": {
+        "has_hunger": 0.25,
+        "has_craft": 0.25,
+        "has_gather": 0.2,
+        "has_base": 0.15,
+        "has_inventory": 0.15
+      }
+    }
+  },
+  "feature_rules": {
+    "has_hunger": {
+      "positive_terms": [
+        "hunger",
+        "thirst",
+        "stamina",
+        "temperature"
+      ],
+      "node_kinds": [
+        "Script",
+        "Resource",
+        "Node"
+      ],
+      "weights": {
+        "survival": 0.25
+      }
+    },
+    "has_craft": {
+      "positive_terms": [
+        "craft",
+        "recipe",
+        "blueprint"
+      ],
+      "node_kinds": [
+        "Scene",
+        "Script",
+        "Resource"
+      ],
+      "weights": {
+        "survival": 0.25
+      }
+    },
+    "has_gather": {
+      "positive_terms": [
+        "gather",
+        "harvest",
+        "mine",
+        "chop"
+      ],
+      "node_kinds": [
+        "Script",
+        "Node"
+      ],
+      "weights": {
+        "survival": 0.2
+      }
+    },
+    "has_base": {
+      "positive_terms": [
+        "base",
+        "shelter",
+        "placement",
+        "build"
+      ],
+      "node_kinds": [
+        "Scene",
+        "Script",
+        "Node"
+      ],
+      "weights": {
+        "survival": 0.15
+      }
+    },
+    "has_inventory": {
+      "positive_terms": [
+        "inventory",
+        "storage",
+        "container"
+      ],
+      "node_kinds": [
+        "Scene",
+        "Node",
+        "Script"
+      ],
+      "weights": {
+        "survival": 0.15
+      }
+    }
+  },
+  "negative_weights": {},
+  "gameplay_loop_templates": {
+    "survival": [
+      {
+        "title": "探索与寻找资源",
+        "text": "探索与寻找资源",
+        "evidence_features": [
+          "has_hunger",
+          "has_craft",
+          "has_gather",
+          "has_base",
+          "has_inventory"
+        ]
+      },
+      {
+        "title": "采集或战斗获得材料",
+        "text": "采集或战斗获得材料",
+        "evidence_features": [
+          "has_hunger",
+          "has_craft",
+          "has_gather",
+          "has_base",
+          "has_inventory"
+        ]
+      },
+      {
+        "title": "管理生存状态",
+        "text": "管理生存状态",
+        "evidence_features": [
+          "has_hunger",
+          "has_craft",
+          "has_gather",
+          "has_base",
+          "has_inventory"
+        ]
+      },
+      {
+        "title": "制作工具或装备",
+        "text": "制作工具或装备",
+        "evidence_features": [
+          "has_hunger",
+          "has_craft",
+          "has_gather",
+          "has_base",
+          "has_inventory"
+        ]
+      },
+      {
+        "title": "建设基地并进入下一轮",
+        "text": "建设基地并进入下一轮",
+        "evidence_features": [
+          "has_hunger",
+          "has_craft",
+          "has_gather",
+          "has_base",
+          "has_inventory"
+        ]
+      }
+    ]
+  },
+  "module_rules": {
+    "survival": [
+      {
+        "module": "Survival State System",
+        "responsibility": "承载饥饿、体力等持续压力",
+        "terms": [
+          "hunger",
+          "thirst",
+          "stamina"
+        ]
+      },
+      {
+        "module": "Crafting And Gathering",
+        "responsibility": "承载采集与制作循环",
+        "terms": [
+          "craft",
+          "recipe",
+          "gather"
+        ]
+      },
+      {
+        "module": "Base Building",
+        "responsibility": "承载基地与建造",
+        "terms": [
+          "base",
+          "build",
+          "placement"
+        ]
+      }
+    ]
+  },
+  "compatible_with": [
+    "action",
+    "rpg",
+    "sandbox",
+    "management"
+  ],
+  "suppresses": []
+}

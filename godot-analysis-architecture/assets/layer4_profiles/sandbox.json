@@ -1,0 +1,169 @@
+{
+  "schema_version": "layer4_profile.v2",
+  "profile_id": "sandbox",
+  "profile_layer": "modifier",
+  "display_name": "Sandbox",
+  "identity_rules": {
+    "sandbox": {
+      "threshold": 0.45,
+      "summary": "以自由构造、开放交互和系统组合玩法为核心的沙盒特征。",
+      "secondary_types": [
+        "open_interaction",
+        "construction",
+        "system_combination"
+      ],
+      "feature_weights": {
+        "has_sandbox": 0.3,
+        "has_build": 0.25,
+        "has_interact": 0.2,
+        "has_physics": 0.15,
+        "has_open": 0.1
+      }
+    }
+  },
+  "feature_rules": {
+    "has_sandbox": {
+      "positive_terms": [
+        "sandbox"
+      ],
+      "node_kinds": [
+        "Scene",
+        "Node",
+        "Script"
+      ],
+      "weights": {
+        "sandbox": 0.3
+      }
+    },
+    "has_build": {
+      "positive_terms": [
+        "build",
+        "placement"
+      ],
+      "node_kinds": [
+        "Scene",
+        "Node",
+        "Script"
+      ],
+      "weights": {
+        "sandbox": 0.25
+      }
+    },
+    "has_interact": {
+      "positive_terms": [
+        "interact"
+      ],
+      "node_kinds": [
+        "Scene",
+        "Node",
+        "Script"
+      ],
+      "weights": {
+        "sandbox": 0.2
+      }
+    },
+    "has_physics": {
+      "positive_terms": [
+        "physics"
+      ],
+      "node_kinds": [
+        "Script",
+        "Node",
+        "Scene"
+      ],
+      "weights": {
+        "sandbox": 0.15
+      }
+    },
+    "has_open": {
+      "positive_terms": [
+        "open",
+        "free_mode"
+      ],
+      "node_kinds": [
+        "Script",
+        "Node"
+      ],
+      "weights": {
+        "sandbox": 0.1
+      }
+    }
+  },
+  "negative_weights": {},
+  "gameplay_loop_templates": {
+    "sandbox": [
+      {
+        "title": "自由探索或测试系统",
+        "text": "自由探索或测试系统",
+        "evidence_features": [
+          "has_sandbox",
+          "has_build",
+          "has_interact",
+          "has_physics",
+          "has_open"
+        ]
+      },
+      {
+        "title": "构建/放置/交互对象",
+        "text": "构建/放置/交互对象",
+        "evidence_features": [
+          "has_sandbox",
+          "has_build",
+          "has_interact",
+          "has_physics",
+          "has_open"
+        ]
+      },
+      {
+        "title": "观察系统反馈",
+        "text": "观察系统反馈",
+        "evidence_features": [
+          "has_sandbox",
+          "has_build",
+          "has_interact",
+          "has_physics",
+          "has_open"
+        ]
+      },
+      {
+        "title": "继续扩展和实验",
+        "text": "继续扩展和实验",
+        "evidence_features": [
+          "has_sandbox",
+          "has_build",
+          "has_interact",
+          "has_physics",
+          "has_open"
+        ]
+      }
+    ]
+  },
+  "module_rules": {
+    "sandbox": [
+      {
+        "module": "Construction Layer",
+        "responsibility": "承载建造与放置",
+        "terms": [
+          "build",
+          "placement"
+        ]
+      },
+      {
+        "module": "Interaction Sandbox",
+        "responsibility": "承载自由交互与实验性玩法",
+        "terms": [
+          "interact",
+          "physics"
+        ]
+      }
+    ]
+  },
+  "compatible_with": [
+    "survival",
+    "management",
+    "simulation",
+    "city_builder",
+    "rpg"
+  ],
+  "suppresses": []
+}

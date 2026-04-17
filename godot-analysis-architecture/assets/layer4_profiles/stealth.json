@@ -1,0 +1,171 @@
+{
+  "schema_version": "layer4_profile.v2",
+  "profile_id": "stealth",
+  "profile_layer": "modifier",
+  "display_name": "Stealth",
+  "identity_rules": {
+    "stealth": {
+      "threshold": 0.45,
+      "summary": "以躲藏、侦测、警戒和规避正面冲突为核心的潜行特征。",
+      "secondary_types": [
+        "detection_avoidance",
+        "guard_pattern",
+        "low_visibility"
+      ],
+      "feature_weights": {
+        "has_stealth": 0.3,
+        "has_hide": 0.25,
+        "has_detect": 0.2,
+        "has_alert": 0.15,
+        "has_guard": 0.1
+      }
+    }
+  },
+  "feature_rules": {
+    "has_stealth": {
+      "positive_terms": [
+        "stealth"
+      ],
+      "node_kinds": [
+        "Script",
+        "Scene",
+        "Node"
+      ],
+      "weights": {
+        "stealth": 0.3
+      }
+    },
+    "has_hide": {
+      "positive_terms": [
+        "hide",
+        "cover"
+      ],
+      "node_kinds": [
+        "Script",
+        "Node"
+      ],
+      "weights": {
+        "stealth": 0.25
+      }
+    },
+    "has_detect": {
+      "positive_terms": [
+        "detect",
+        "vision",
+        "hearing"
+      ],
+      "node_kinds": [
+        "Script",
+        "Node",
+        "Resource"
+      ],
+      "weights": {
+        "stealth": 0.2
+      }
+    },
+    "has_alert": {
+      "positive_terms": [
+        "alert"
+      ],
+      "node_kinds": [
+        "Script",
+        "UI",
+        "Node"
+      ],
+      "weights": {
+        "stealth": 0.15
+      }
+    },
+    "has_guard": {
+      "positive_terms": [
+        "guard",
+        "patrol"
+      ],
+      "node_kinds": [
+        "Scene",
+        "Node",
+        "Script"
+      ],
+      "weights": {
+        "stealth": 0.1
+      }
+    }
+  },
+  "negative_weights": {},
+  "gameplay_loop_templates": {
+    "stealth": [
+      {
+        "title": "观察守卫与路线",
+        "text": "观察守卫与路线",
+        "evidence_features": [
+          "has_stealth",
+          "has_hide",
+          "has_detect",
+          "has_alert",
+          "has_guard"
+        ]
+      },
+      {
+        "title": "利用隐蔽区域接近目标",
+        "text": "利用隐蔽区域接近目标",
+        "evidence_features": [
+          "has_stealth",
+          "has_hide",
+          "has_detect",
+          "has_alert",
+          "has_guard"
+        ]
+      },
+      {
+        "title": "规避侦测或制造机会",
+        "text": "规避侦测或制造机会",
+        "evidence_features": [
+          "has_stealth",
+          "has_hide",
+          "has_detect",
+          "has_alert",
+          "has_guard"
+        ]
+      },
+      {
+        "title": "完成目标并脱离现场",
+        "text": "完成目标并脱离现场",
+        "evidence_features": [
+          "has_stealth",
+          "has_hide",
+          "has_detect",
+          "has_alert",
+          "has_guard"
+        ]
+      }
+    ]
+  },
+  "module_rules": {
+    "stealth": [
+      {
+        "module": "Detection System",
+        "responsibility": "承载侦测与警戒逻辑",
+        "terms": [
+          "detect",
+          "alert",
+          "vision"
+        ]
+      },
+      {
+        "module": "Hide And Cover",
+        "responsibility": "承载躲藏和掩体交互",
+        "terms": [
+          "hide",
+          "cover"
+        ]
+      }
+    ]
+  },
+  "compatible_with": [
+    "action",
+    "horror",
+    "story",
+    "rpg"
+  ],
+  "suppresses": []
+}

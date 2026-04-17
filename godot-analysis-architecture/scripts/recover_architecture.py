@@ -30,7 +30,13 @@ def artifact(kind: str, project_root: str | None, data: Any) -> dict[str, Any]:
     }
 
 
-def recover(layer2_dir: Path | str, layer3_dir: Path | str, output_dir: Path | str, profile_path: Path | str | None = None) -> None:
+def recover(
+    layer2_dir: Path | str,
+    layer3_dir: Path | str,
+    output_dir: Path | str,
+    profile_path: Path | str | None = None,
+    profile_dir: Path | str | None = None,
+) -> None:
     layer2 = Path(layer2_dir)
     layer3 = Path(layer3_dir)
     out = Path(output_dir)
@@ -50,9 +56,16 @@ def recover(layer2_dir: Path | str, layer3_dir: Path | str, output_dir: Path | s
     semantic_findings = findings_artifact["data"]
     annotations = annotations_artifact["data"]
     project_root = graph_artifact.get("project_root")
-    profile = load_profile(profile_path)
+    profiles = load_profiles(profile_path=profile_path, profile_dir=profile_dir)
+    profile_evaluations = [evaluate_profile(graph, profile) for profile in profiles] if profile_dir else []
+    project_identity_v2 = select_project_identity(profile_evaluations, profiles) if profile_dir else None
+    profile = selected_profile_for_identity(project_identity_v2, profiles) if project_identity_v2 else profiles[0]
 
     summary = build_summary(graph, stats, systems, patterns, semantic_findings, annotations, profile)
+    if project_identity_v2:
+        summary["project_identity_v2"] = project_identity_v2
+        summary["project_identity"] = legacy_identity_from_v2(project_identity_v2, summary["project_identity"])
+        summary["gameplay_loop"] = merge_v2_gameplay_loop(summary["gameplay_loop"], project_identity_v2, profile_evaluations, profiles)
     findings = build_findings(summary, systems, patterns, semantic_findings)
     risks = build_risks(summary, graph, systems, semantic_findings)
     recommendations = build_recommendations(risks, summary)
@@ -64,6 +77,11 @@ def recover(layer2_dir: Path | str, layer3_dir: Path | str, output_dir: Path | s
     write_json(out / "findings.json", artifact("findings", project_root, {"findings": findings}))
     write_json(out / "risks.json", artifact("risks", project_root, {"risks": risks}))
     write_json(out / "recommendations.json", artifact("recommendations", project_root, {"recommendations": recommendations}))
+    if project_identity_v2:
+        write_json(out / "profile_evaluation.json", artifact("profile_evaluation", project_root, {"evaluations": profile_evaluations}))
+        write_json(out / "project_identity.json", artifact("project_identity", project_root, project_identity_v2))
+        write_json(out / "gameplay_loop.json", artifact("gameplay_loop", project_root, {"steps": summary.get("gameplay_loop", [])}))
+        write_json(out / "module_responsibilities.json", artifact("module_responsibilities", project_root, {"modules": summary.get("module_responsibilities", [])}))
     (out / "architecture_report.md").write_text(report, encoding="utf-8")
     (out / "scene_flow.mmd").write_text(summary.get("scene_flow_abstraction", {}).get("mermaid", "flowchart TD\n"), encoding="utf-8")
     (out / "module_map.mmd").write_text(summary.get("module_map", {}).get("mermaid", "flowchart TD\n"), encoding="utf-8")
@@ -71,10 +89,24 @@ def recover(layer2_dir: Path | str, layer3_dir: Path | str, output_dir: Path | s
 
 def load_profile(profile_path: Path | str | None) -> dict[str, Any]:
     if not profile_path:
-        return {"profile_id": "generic", "feature_rules": {}, "identity_rules": {}}
+        return {"profile_id": "generic", "profile_layer": "primary", "feature_rules": {}, "identity_rules": {}}
     profile = json.loads(Path(profile_path).read_text(encoding="utf-8"))
     validate_profile_shape(profile)
     return profile
+
+
+def load_profiles(profile_path: Path | str | None = None, profile_dir: Path | str | None = None) -> list[dict[str, Any]]:
+    if profile_dir:
+        root = Path(profile_dir)
+        profiles = []
+        for path in sorted(root.glob("*.json")):
+            profile = json.loads(path.read_text(encoding="utf-8"))
+            validate_profile_shape(profile)
+            profiles.append(profile)
+        if not profiles:
+            raise ValueError(f"No Layer4 profiles found in {root}")
+        return profiles
+    return [load_profile(profile_path)]
 
 
 def validate_profile_shape(profile: dict[str, Any]) -> None:
@@ -87,6 +119,13 @@ def validate_profile_shape(profile: dict[str, Any]) -> None:
         raise ValueError("Layer4 profile feature_rules must be an object.")
     if not isinstance(profile.get("identity_rules"), dict):
         raise ValueError("Layer4 profile identity_rules must be an object.")
+    layer = profile.get("profile_layer", "primary")
+    if layer not in {"primary", "modifier", "flavor"}:
+        raise ValueError(f"Layer4 profile has invalid profile_layer: {layer}")
+    if "compatible_with" in profile and not isinstance(profile["compatible_with"], list):
+        raise ValueError("Layer4 profile compatible_with must be a list.")
+    if "suppresses" in profile and not isinstance(profile["suppresses"], list):
+        raise ValueError("Layer4 profile suppresses must be a list.")
 
 
 def build_summary(
@@ -377,6 +416,248 @@ def build_project_features(
         "scores": {key: round(value, 3) for key, value in sorted(scores.items())},
         "confidence_notes": confidence_notes_for_features(observed, profile or {}),
     }
+
+
+def evaluate_profile(graph: dict[str, Any], profile: dict[str, Any]) -> dict[str, Any]:
+    profile_id = profile.get("profile_id", "unknown")
+    identity_type, identity = identity_rule_for_profile(profile)
+    feature_weights = feature_weights_for_profile(profile)
+    matched_features = []
+    missing_features = []
+    negative_matches = []
+    raw_score = 0.0
+    total_positive_weight = sum(float(value) for value in feature_weights.values()) or 1.0
+    feature_results: dict[str, list[dict[str, Any]]] = {}
+
+    for feature, rule in profile.get("feature_rules", {}).items():
+        matches, _excluded = match_feature_rule(graph, rule)
+        feature_results[feature] = evidence_for_nodes(matches[: int(rule.get("max_evidence", 8))]) if matches else []
+
+    for feature, weight in feature_weights.items():
+        evidence = feature_results.get(feature, [])
+        if evidence:
+            raw_score += float(weight)
+            matched_features.append({"feature": feature, "score": float(weight), "evidence": evidence})
+        else:
+            missing_features.append(feature)
+
+    for feature, penalty in profile.get("negative_weights", {}).items():
+        evidence = feature_results.get(feature, [])
+        if evidence:
+            raw_score += float(penalty)
+            negative_matches.append({"feature": feature, "score": float(penalty), "evidence": evidence})
+
+    missing_required = [feature for feature in identity.get("required_features", []) if not feature_results.get(feature)]
+    disqualified = bool(missing_required)
+    normalized_score = 0.0 if disqualified else max(0.0, min(1.0, raw_score / total_positive_weight))
+    coverage_factor = len(matched_features) / max(1, len(feature_weights))
+    evidence_quality_factor = evidence_quality_for_matches(matched_features)
+    confidence = max(0.0, min(0.95, normalized_score * evidence_quality_factor * (0.75 + 0.25 * coverage_factor)))
+
+    return {
+        "profile_id": profile_id,
+        "identity_type": identity_type,
+        "profile_layer": profile.get("profile_layer", "primary"),
+        "display_name": profile.get("display_name", profile_id),
+        "raw_score": round(raw_score, 3),
+        "normalized_score": round(normalized_score, 3),
+        "matched_features": matched_features,
+        "missing_features": missing_features,
+        "negative_matches": negative_matches,
+        "missing_required_features": missing_required,
+        "disqualified": disqualified,
+        "confidence": round(confidence, 3),
+        "threshold": float(identity.get("threshold", 0.5)),
+        "summary": identity.get("summary", ""),
+        "secondary_types": identity.get("secondary_types", []),
+    }
+
+
+def feature_weights_for_profile(profile: dict[str, Any]) -> dict[str, float]:
+    identity_type, identity = identity_rule_for_profile(profile)
+    identity_weights = identity.get("feature_weights", {})
+    if identity_weights:
+        return {feature: float(weight) for feature, weight in identity_weights.items()}
+    weights: dict[str, float] = {}
+    for feature, rule in profile.get("feature_rules", {}).items():
+        value = rule.get("weights", {}).get(identity_type)
+        if value is not None:
+            weights[feature] = float(value)
+    return weights
+
+
+def identity_rule_for_profile(profile: dict[str, Any]) -> tuple[str, dict[str, Any]]:
+    profile_id = profile.get("profile_id", "unknown")
+    identity_rules = profile.get("identity_rules", {})
+    if profile_id in identity_rules:
+        return profile_id, identity_rules[profile_id]
+    if identity_rules:
+        identity_type = next(iter(identity_rules))
+        return identity_type, identity_rules[identity_type]
+    return profile_id, {}
+
+
+def evidence_quality_for_matches(matched_features: list[dict[str, Any]]) -> float:
+    evidence_count = sum(len(item.get("evidence", [])) for item in matched_features)
+    if evidence_count <= 1:
+        return 0.7
+    if evidence_count <= 3:
+        return 0.85
+    return 1.0
+
+
+def select_project_identity(evaluations: list[dict[str, Any]], profiles: list[dict[str, Any]]) -> dict[str, Any]:
+    profile_lookup = {profile.get("profile_id"): profile for profile in profiles}
+    passing = [item for item in evaluations if item.get("normalized_score", 0) >= item.get("threshold", 0.5)]
+    primary_candidates = sorted(
+        [item for item in passing if item.get("profile_layer", "primary") == "primary"],
+        key=lambda item: (item.get("normalized_score", 0), item.get("confidence", 0)),
+        reverse=True,
+    )
+    if not primary_candidates:
+        return {
+            "primary": None,
+            "primary_candidates": [],
+            "modifiers": [],
+            "flavors": [],
+            "hybrid_summary": "未找到达到阈值的主类型 profile。",
+        }
+
+    primary = profile_choice(primary_candidates[0])
+    close_primaries = [
+        profile_choice(item)
+        for item in primary_candidates
+        if primary["score"] - float(item.get("normalized_score", 0)) < 0.08
+    ]
+    modifiers = [
+        profile_choice(item)
+        for item in passing
+        if item.get("profile_layer") == "modifier" and profiles_compatible(primary.get("profile_id"), item.get("profile_id"), profile_lookup)
+    ]
+    flavors = [profile_choice(item) for item in passing if item.get("profile_layer") == "flavor"]
+    selected = apply_suppression([primary] + modifiers + flavors, profile_lookup)
+    primary = next((item for item in selected if item["layer"] == "primary"), primary)
+    modifiers = [item for item in selected if item["layer"] == "modifier"]
+    flavors = [item for item in selected if item["layer"] == "flavor"]
+    summary_bits = [primary["genre"]] + [item["genre"] for item in modifiers] + [item["genre"] for item in flavors]
+    return {
+        "primary": primary,
+        "primary_candidates": close_primaries if len(close_primaries) > 1 else [],
+        "modifiers": modifiers,
+        "flavors": flavors,
+        "hybrid_summary": "该项目更像是 " + " + ".join(summary_bits) + " 的组合。",
+    }
+
+
+def profile_choice(evaluation: dict[str, Any]) -> dict[str, Any]:
+    return {
+        "genre": evaluation.get("identity_type") or evaluation.get("profile_id"),
+        "profile_id": evaluation.get("profile_id"),
+        "layer": evaluation.get("profile_layer", "primary"),
+        "score": float(evaluation.get("normalized_score", 0)),
+        "confidence": float(evaluation.get("confidence", 0)),
+        "summary": evaluation.get("summary", ""),
+        "secondary_types": evaluation.get("secondary_types", []),
+    }
+
+
+def profiles_compatible(primary_id: str | None, candidate_id: str | None, profile_lookup: dict[str, dict[str, Any]]) -> bool:
+    if not primary_id or not candidate_id:
+        return False
+    primary = profile_lookup.get(primary_id, {})
+    candidate = profile_lookup.get(candidate_id, {})
+    return candidate_id in primary.get("compatible_with", []) or primary_id in candidate.get("compatible_with", [])
+
+
+def apply_suppression(selected: list[dict[str, Any]], profile_lookup: dict[str, dict[str, Any]]) -> list[dict[str, Any]]:
+    kept = list(selected)
+    for item in list(selected):
+        suppresses = set(profile_lookup.get(item.get("profile_id"), {}).get("suppresses", []))
+        for other in list(kept):
+            if other.get("profile_id") not in suppresses and other["genre"] not in suppresses:
+                continue
+            loser = other if item["confidence"] >= other["confidence"] else item
+            if loser in kept:
+                kept.remove(loser)
+    return kept
+
+
+def selected_profile_for_identity(project_identity_v2: dict[str, Any] | None, profiles: list[dict[str, Any]]) -> dict[str, Any]:
+    if not project_identity_v2 or not project_identity_v2.get("primary"):
+        return profiles[0] if profiles else {"profile_id": "generic", "profile_layer": "primary", "feature_rules": {}, "identity_rules": {}}
+    selected_id = project_identity_v2["primary"].get("profile_id")
+    return next((profile for profile in profiles if profile.get("profile_id") == selected_id), profiles[0])
+
+
+def legacy_identity_from_v2(project_identity_v2: dict[str, Any], fallback: dict[str, Any]) -> dict[str, Any]:
+    primary = project_identity_v2.get("primary") or {}
+    if not primary:
+        return fallback
+    secondary_types = list(fallback.get("secondary_types", []))
+    secondary_types.extend(item["genre"] for item in project_identity_v2.get("modifiers", []))
+    secondary_types.extend(item["genre"] for item in project_identity_v2.get("flavors", []))
+    return {
+        **fallback,
+        "primary_type": primary.get("genre", fallback.get("primary_type", "unknown")),
+        "secondary_types": sorted(set(secondary_types)),
+        "confidence": round(float(primary.get("confidence", fallback.get("confidence", 0))), 3),
+        "summary": project_identity_v2.get("hybrid_summary") or fallback.get("summary", ""),
+    }
+
+
+def merge_v2_gameplay_loop(
+    base_loop: list[dict[str, Any]],
+    project_identity_v2: dict[str, Any],
+    evaluations: list[dict[str, Any]],
+    profiles: list[dict[str, Any]],
+) -> list[dict[str, Any]]:
+    profile_lookup = {profile.get("profile_id"): profile for profile in profiles}
+    evaluation_lookup = {item.get("profile_id"): item for item in evaluations}
+    merged = list(base_loop)
+    existing_titles = {item.get("title") for item in merged}
+    selected = []
+    if project_identity_v2.get("primary"):
+        selected.append(project_identity_v2["primary"])
+    selected.extend(project_identity_v2.get("modifiers", []))
+    selected.extend(project_identity_v2.get("flavors", []))
+    for choice in selected:
+        profile = profile_lookup.get(choice.get("profile_id"), {})
+        evaluation = evaluation_lookup.get(choice.get("profile_id"), {})
+        evidence = evidence_from_evaluation(evaluation)
+        if not evidence:
+            continue
+        identity_type = choice.get("genre")
+        for template in profile.get("gameplay_loop_templates", {}).get(identity_type, []):
+            item = normalize_loop_template(template, evidence)
+            if item["title"] in existing_titles:
+                continue
+            item["step"] = len(merged) + 1
+            merged.append(item)
+            existing_titles.add(item["title"])
+    return merged
+
+
+def evidence_from_evaluation(evaluation: dict[str, Any]) -> list[dict[str, Any]]:
+    evidence = []
+    for feature in evaluation.get("matched_features", []):
+        evidence.extend(feature.get("evidence", []))
+    return evidence
+
+
+def normalize_loop_template(template: Any, evidence: list[dict[str, Any]]) -> dict[str, Any]:
+    if isinstance(template, str):
+        return {
+            "title": template,
+            "player_action": template,
+            "system_response": template,
+            "evidence": evidence[:5],
+        }
+    item = dict(template)
+    item.setdefault("title", item.get("text", "Profile step"))
+    item.setdefault("player_action", item.get("text", item["title"]))
+    item.setdefault("system_response", item.get("text", item["title"]))
+    item.setdefault("evidence", evidence[:5])
+    return item
 
 
 def confidence_notes_for_features(observed: dict[str, bool], profile: dict[str, Any]) -> list[str]:
@@ -936,9 +1217,21 @@ def build_report(summary: dict[str, Any], findings: list[dict[str, Any]], risks:
         "",
     ]
     identity = summary.get("project_identity", {})
-    lines.append(f"- 类型: `{identity.get('primary_type')}`")
-    lines.append(f"- 置信度: {identity.get('confidence')}")
-    lines.append(f"- 判断: {identity.get('summary')}")
+    identity_v2 = summary.get("project_identity_v2")
+    if identity_v2 and identity_v2.get("primary"):
+        primary = identity_v2["primary"]
+        lines.append(f"- 主类型: `{primary.get('genre')}` (score {primary.get('score')}, confidence {primary.get('confidence')})")
+        if identity_v2.get("modifiers"):
+            lines.append(f"- 修饰类型: {', '.join(item.get('genre', '') for item in identity_v2.get('modifiers', []))}")
+        if identity_v2.get("flavors"):
+            lines.append(f"- 风格类型: {', '.join(item.get('genre', '') for item in identity_v2.get('flavors', []))}")
+        if identity_v2.get("primary_candidates"):
+            lines.append(f"- 主类型候选: {', '.join(item.get('genre', '') for item in identity_v2.get('primary_candidates', []))}")
+        lines.append(f"- 判断: {identity_v2.get('hybrid_summary')}")
+    else:
+        lines.append(f"- 类型: `{identity.get('primary_type')}`")
+        lines.append(f"- 置信度: {identity.get('confidence')}")
+        lines.append(f"- 判断: {identity.get('summary')}")
     if identity.get("secondary_types"):
         lines.append(f"- 次级标签: {', '.join(identity.get('secondary_types', []))}")
     lines.extend([
@@ -1077,8 +1370,9 @@ def main() -> int:
     parser.add_argument("--layer3", required=True, help="Layer 3 artifact directory.")
     parser.add_argument("--output", required=True, help="Output directory for Layer 4 artifacts.")
     parser.add_argument("--profile", help="Optional external Layer 4 domain/profile JSON.")
+    parser.add_argument("--profile-dir", help="Optional directory of Layer 4 profile JSON files for multi-profile evaluation.")
     args = parser.parse_args()
-    recover(args.layer2, args.layer3, args.output, profile_path=args.profile)
+    recover(args.layer2, args.layer3, args.output, profile_path=args.profile, profile_dir=args.profile_dir)
     return 0
 
 

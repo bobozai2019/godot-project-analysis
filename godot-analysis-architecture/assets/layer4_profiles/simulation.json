@@ -1,0 +1,159 @@
+{
+  "schema_version": "layer4_profile.v2",
+  "profile_id": "simulation",
+  "profile_layer": "modifier",
+  "display_name": "Simulation",
+  "identity_rules": {
+    "simulation": {
+      "threshold": 0.45,
+      "summary": "以系统状态演化和模拟逻辑为核心的模拟特征。",
+      "secondary_types": [
+        "system_driven",
+        "state_evolution",
+        "simulation_loop"
+      ],
+      "feature_weights": {
+        "has_sim": 0.3,
+        "has_state": 0.25,
+        "has_system": 0.2,
+        "has_update": 0.15,
+        "has_entity": 0.1
+      }
+    }
+  },
+  "feature_rules": {
+    "has_sim": {
+      "positive_terms": [
+        "simulate",
+        "simulation"
+      ],
+      "node_kinds": [
+        "Script",
+        "Scene",
+        "Resource"
+      ],
+      "weights": {
+        "simulation": 0.3
+      }
+    },
+    "has_state": {
+      "positive_terms": [
+        "state"
+      ],
+      "node_kinds": [
+        "Script",
+        "Resource",
+        "Node"
+      ],
+      "weights": {
+        "simulation": 0.25
+      }
+    },
+    "has_system": {
+      "positive_terms": [
+        "system"
+      ],
+      "node_kinds": [
+        "Script",
+        "Node"
+      ],
+      "weights": {
+        "simulation": 0.2
+      }
+    },
+    "has_update": {
+      "positive_terms": [
+        "update",
+        "_process"
+      ],
+      "node_kinds": [
+        "Script"
+      ],
+      "weights": {
+        "simulation": 0.15
+      }
+    },
+    "has_entity": {
+      "positive_terms": [
+        "entity"
+      ],
+      "node_kinds": [
+        "Script",
+        "Resource"
+      ],
+      "weights": {
+        "simulation": 0.1
+      }
+    }
+  },
+  "negative_weights": {},
+  "gameplay_loop_templates": {
+    "simulation": [
+      {
+        "title": "观察系统状态",
+        "text": "观察系统状态",
+        "evidence_features": [
+          "has_sim",
+          "has_state",
+          "has_system",
+          "has_update",
+          "has_entity"
+        ]
+      },
+      {
+        "title": "调整参数或行为",
+        "text": "调整参数或行为",
+        "evidence_features": [
+          "has_sim",
+          "has_state",
+          "has_system",
+          "has_update",
+          "has_entity"
+        ]
+      },
+      {
+        "title": "等待系统演化",
+        "text": "等待系统演化",
+        "evidence_features": [
+          "has_sim",
+          "has_state",
+          "has_system",
+          "has_update",
+          "has_entity"
+        ]
+      },
+      {
+        "title": "分析反馈并再次调整",
+        "text": "分析反馈并再次调整",
+        "evidence_features": [
+          "has_sim",
+          "has_state",
+          "has_system",
+          "has_update",
+          "has_entity"
+        ]
+      }
+    ]
+  },
+  "module_rules": {
+    "simulation": [
+      {
+        "module": "Simulation Core",
+        "responsibility": "承载状态和系统更新",
+        "terms": [
+          "simulation",
+          "state",
+          "update"
+        ]
+      }
+    ]
+  },
+  "compatible_with": [
+    "management",
+    "city_builder",
+    "sandbox",
+    "sports",
+    "racing"
+  ],
+  "suppresses": []
+}

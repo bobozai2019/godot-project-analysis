@@ -105,6 +105,30 @@ def validate_artifacts(layer4_dir: Path | str) -> list[str]:
     if not (root / "module_map.mmd").read_text(encoding="utf-8").startswith("flowchart TD"):
         errors.append("module_map.mmd must start with flowchart TD")
 
+    profile_evaluation_path = root / "profile_evaluation.json"
+    if profile_evaluation_path.exists():
+        evaluation = read_json(profile_evaluation_path).get("data", {})
+        if not evaluation.get("evaluations"):
+            errors.append("profile_evaluation.json contains no evaluations")
+        for item in evaluation.get("evaluations", []):
+            for key in ("profile_id", "profile_layer", "normalized_score", "confidence"):
+                if key not in item:
+                    errors.append(f"profile_evaluation item missing {key}: {item.get('profile_id')}")
+
+    project_identity_path = root / "project_identity.json"
+    if project_identity_path.exists():
+        identity_v2 = read_json(project_identity_path).get("data", {})
+        if not identity_v2.get("primary") and not identity_v2.get("primary_candidates"):
+            errors.append("project_identity.json missing primary or primary_candidates")
+
+    gameplay_loop_path = root / "gameplay_loop.json"
+    if gameplay_loop_path.exists() and not read_json(gameplay_loop_path).get("data", {}).get("steps"):
+        errors.append("gameplay_loop.json contains no steps")
+
+    modules_path = root / "module_responsibilities.json"
+    if modules_path.exists() and not read_json(modules_path).get("data", {}).get("modules"):
+        errors.append("module_responsibilities.json contains no modules")
+
     for collection_name, artifact_name in [
         ("findings", "findings.json"),
         ("risks", "risks.json"),

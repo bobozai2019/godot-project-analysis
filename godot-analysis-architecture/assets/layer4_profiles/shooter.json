@@ -1,0 +1,192 @@
+{
+  "schema_version": "layer4_profile.v2",
+  "profile_id": "shooter",
+  "profile_layer": "primary",
+  "display_name": "Shooter",
+  "identity_rules": {
+    "shooter": {
+      "threshold": 0.5,
+      "summary": "以瞄准、射击、弹药与武器系统为核心的射击游戏。",
+      "secondary_types": [
+        "projectile_driven",
+        "weapon_based",
+        "aiming"
+      ],
+      "feature_weights": {
+        "has_shoot": 0.3,
+        "has_projectile": 0.25,
+        "has_aim": 0.2,
+        "has_reload": 0.15,
+        "has_weapon": 0.1
+      }
+    }
+  },
+  "feature_rules": {
+    "has_shoot": {
+      "positive_terms": [
+        "shoot",
+        "fire"
+      ],
+      "node_kinds": [
+        "Script",
+        "Node"
+      ],
+      "weights": {
+        "shooter": 0.3
+      }
+    },
+    "has_projectile": {
+      "positive_terms": [
+        "bullet",
+        "projectile"
+      ],
+      "node_kinds": [
+        "Scene",
+        "Node",
+        "Script"
+      ],
+      "weights": {
+        "shooter": 0.25
+      }
+    },
+    "has_aim": {
+      "positive_terms": [
+        "aim",
+        "crosshair"
+      ],
+      "node_kinds": [
+        "Script",
+        "Node",
+        "Scene"
+      ],
+      "weights": {
+        "shooter": 0.2
+      }
+    },
+    "has_reload": {
+      "positive_terms": [
+        "reload",
+        "ammo"
+      ],
+      "node_kinds": [
+        "Script",
+        "Resource",
+        "Node"
+      ],
+      "weights": {
+        "shooter": 0.15
+      }
+    },
+    "has_weapon": {
+      "positive_terms": [
+        "weapon",
+        "gun"
+      ],
+      "node_kinds": [
+        "Scene",
+        "Node",
+        "Script",
+        "Resource"
+      ],
+      "weights": {
+        "shooter": 0.1
+      }
+    }
+  },
+  "negative_weights": {},
+  "gameplay_loop_templates": {
+    "shooter": [
+      {
+        "title": "观察敌人与掩体",
+        "text": "观察敌人与掩体",
+        "evidence_features": [
+          "has_shoot",
+          "has_projectile",
+          "has_aim",
+          "has_reload",
+          "has_weapon"
+        ]
+      },
+      {
+        "title": "瞄准与开火",
+        "text": "瞄准与开火",
+        "evidence_features": [
+          "has_shoot",
+          "has_projectile",
+          "has_aim",
+          "has_reload",
+          "has_weapon"
+        ]
+      },
+      {
+        "title": "结算命中和伤害",
+        "text": "结算命中和伤害",
+        "evidence_features": [
+          "has_shoot",
+          "has_projectile",
+          "has_aim",
+          "has_reload",
+          "has_weapon"
+        ]
+      },
+      {
+        "title": "处理装弹与资源",
+        "text": "处理装弹与资源",
+        "evidence_features": [
+          "has_shoot",
+          "has_projectile",
+          "has_aim",
+          "has_reload",
+          "has_weapon"
+        ]
+      },
+      {
+        "title": "继续推进战斗",
+        "text": "继续推进战斗",
+        "evidence_features": [
+          "has_shoot",
+          "has_projectile",
+          "has_aim",
+          "has_reload",
+          "has_weapon"
+        ]
+      }
+    ]
+  },
+  "module_rules": {
+    "shooter": [
+      {
+        "module": "Weapon System",
+        "responsibility": "承载武器与装弹逻辑",
+        "terms": [
+          "weapon",
+          "gun",
+          "reload"
+        ]
+      },
+      {
+        "module": "Projectile System",
+        "responsibility": "承载子弹与命中对象",
+        "terms": [
+          "bullet",
+          "projectile"
+        ]
+      },
+      {
+        "module": "Aiming UI",
+        "responsibility": "承载准星与瞄准反馈",
+        "terms": [
+          "aim",
+          "crosshair"
+        ]
+      }
+    ]
+  },
+  "compatible_with": [
+    "action",
+    "multiplayer",
+    "horror",
+    "survival"
+  ],
+  "suppresses": []
+}

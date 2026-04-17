@@ -1,0 +1,165 @@
+{
+  "schema_version": "layer4_profile.v2",
+  "profile_id": "idle",
+  "profile_layer": "modifier",
+  "display_name": "Idle",
+  "identity_rules": {
+    "idle": {
+      "threshold": 0.45,
+      "summary": "以自动推进、升级和计时收益为核心的放置挂机特征。",
+      "secondary_types": [
+        "auto_progress",
+        "upgrade_loop",
+        "timer_driven"
+      ],
+      "feature_weights": {
+        "has_idle": 0.3,
+        "has_auto": 0.25,
+        "has_progress": 0.2,
+        "has_upgrade": 0.15,
+        "has_timer": 0.1
+      }
+    }
+  },
+  "feature_rules": {
+    "has_idle": {
+      "positive_terms": [
+        "idle"
+      ],
+      "node_kinds": [
+        "Script",
+        "Node",
+        "Scene"
+      ],
+      "weights": {
+        "idle": 0.3
+      }
+    },
+    "has_auto": {
+      "positive_terms": [
+        "auto",
+        "autoplay"
+      ],
+      "node_kinds": [
+        "Script",
+        "Node"
+      ],
+      "weights": {
+        "idle": 0.25
+      }
+    },
+    "has_progress": {
+      "positive_terms": [
+        "progress",
+        "income"
+      ],
+      "node_kinds": [
+        "Script",
+        "Resource",
+        "Node"
+      ],
+      "weights": {
+        "idle": 0.2
+      }
+    },
+    "has_upgrade": {
+      "positive_terms": [
+        "upgrade"
+      ],
+      "node_kinds": [
+        "Scene",
+        "Node",
+        "Script"
+      ],
+      "weights": {
+        "idle": 0.15
+      }
+    },
+    "has_timer": {
+      "positive_terms": [
+        "timer"
+      ],
+      "node_kinds": [
+        "Node",
+        "Script"
+      ],
+      "weights": {
+        "idle": 0.1
+      }
+    }
+  },
+  "negative_weights": {},
+  "gameplay_loop_templates": {
+    "idle": [
+      {
+        "title": "查看自动收益",
+        "text": "查看自动收益",
+        "evidence_features": [
+          "has_idle",
+          "has_auto",
+          "has_progress",
+          "has_upgrade",
+          "has_timer"
+        ]
+      },
+      {
+        "title": "进行升级或解锁",
+        "text": "进行升级或解锁",
+        "evidence_features": [
+          "has_idle",
+          "has_auto",
+          "has_progress",
+          "has_upgrade",
+          "has_timer"
+        ]
+      },
+      {
+        "title": "等待时间推进",
+        "text": "等待时间推进",
+        "evidence_features": [
+          "has_idle",
+          "has_auto",
+          "has_progress",
+          "has_upgrade",
+          "has_timer"
+        ]
+      },
+      {
+        "title": "再次投资与优化",
+        "text": "再次投资与优化",
+        "evidence_features": [
+          "has_idle",
+          "has_auto",
+          "has_progress",
+          "has_upgrade",
+          "has_timer"
+        ]
+      }
+    ]
+  },
+  "module_rules": {
+    "idle": [
+      {
+        "module": "Auto Progression",
+        "responsibility": "承载自动收益与推进",
+        "terms": [
+          "auto",
+          "progress"
+        ]
+      },
+      {
+        "module": "Upgrade Layer",
+        "responsibility": "承载升级与成长曲线",
+        "terms": [
+          "upgrade"
+        ]
+      }
+    ]
+  },
+  "compatible_with": [
+    "management",
+    "simulation",
+    "multiplayer"
+  ],
+  "suppresses": []
+}

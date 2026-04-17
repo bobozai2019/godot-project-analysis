@@ -1,0 +1,172 @@
+{
+  "schema_version": "layer4_profile.v2",
+  "profile_id": "story",
+  "profile_layer": "flavor",
+  "display_name": "Story",
+  "identity_rules": {
+    "story": {
+      "threshold": 0.4,
+      "summary": "以对话、剧情、选择和事件推进为核心的剧情驱动特征。",
+      "secondary_types": [
+        "dialogue_heavy",
+        "choice_driven",
+        "event_progression"
+      ],
+      "feature_weights": {
+        "has_dialogue": 0.3,
+        "has_narrative": 0.25,
+        "has_choice": 0.2,
+        "has_event": 0.15,
+        "has_cutscene": 0.1
+      }
+    }
+  },
+  "feature_rules": {
+    "has_dialogue": {
+      "positive_terms": [
+        "dialogue",
+        "dialogic"
+      ],
+      "node_kinds": [
+        "Scene",
+        "Node",
+        "Script"
+      ],
+      "weights": {
+        "story": 0.3
+      }
+    },
+    "has_narrative": {
+      "positive_terms": [
+        "story",
+        "narrative"
+      ],
+      "node_kinds": [
+        "Script",
+        "Resource",
+        "Node"
+      ],
+      "weights": {
+        "story": 0.25
+      }
+    },
+    "has_choice": {
+      "positive_terms": [
+        "choice"
+      ],
+      "node_kinds": [
+        "Scene",
+        "Node",
+        "Script"
+      ],
+      "weights": {
+        "story": 0.2
+      }
+    },
+    "has_event": {
+      "positive_terms": [
+        "event"
+      ],
+      "node_kinds": [
+        "Script",
+        "Node",
+        "Scene"
+      ],
+      "weights": {
+        "story": 0.15
+      }
+    },
+    "has_cutscene": {
+      "positive_terms": [
+        "cutscene",
+        "cinematic"
+      ],
+      "node_kinds": [
+        "Scene",
+        "Node",
+        "Script"
+      ],
+      "weights": {
+        "story": 0.1
+      }
+    }
+  },
+  "negative_weights": {},
+  "gameplay_loop_templates": {
+    "story": [
+      {
+        "title": "进入剧情或事件",
+        "text": "进入剧情或事件",
+        "evidence_features": [
+          "has_dialogue",
+          "has_narrative",
+          "has_choice",
+          "has_event",
+          "has_cutscene"
+        ]
+      },
+      {
+        "title": "阅读/选择对话",
+        "text": "阅读/选择对话",
+        "evidence_features": [
+          "has_dialogue",
+          "has_narrative",
+          "has_choice",
+          "has_event",
+          "has_cutscene"
+        ]
+      },
+      {
+        "title": "触发状态变化",
+        "text": "触发状态变化",
+        "evidence_features": [
+          "has_dialogue",
+          "has_narrative",
+          "has_choice",
+          "has_event",
+          "has_cutscene"
+        ]
+      },
+      {
+        "title": "继续推进主线或支线",
+        "text": "继续推进主线或支线",
+        "evidence_features": [
+          "has_dialogue",
+          "has_narrative",
+          "has_choice",
+          "has_event",
+          "has_cutscene"
+        ]
+      }
+    ]
+  },
+  "module_rules": {
+    "story": [
+      {
+        "module": "Dialogue Flow",
+        "responsibility": "承载对话和选择分支",
+        "terms": [
+          "dialogue",
+          "choice"
+        ]
+      },
+      {
+        "module": "Narrative Events",
+        "responsibility": "承载剧情事件和切换",
+        "terms": [
+          "event",
+          "cutscene",
+          "story"
+        ]
+      }
+    ]
+  },
+  "compatible_with": [
+    "rpg",
+    "horror",
+    "puzzle",
+    "stealth",
+    "card"
+  ],
+  "suppresses": []
+}

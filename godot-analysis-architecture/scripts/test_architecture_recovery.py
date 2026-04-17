@@ -158,7 +158,160 @@ def alpha_profile(path: Path):
     return path
 
 
+def profile_dir(root: Path):
+    profiles = root / "profiles"
+    profiles.mkdir()
+    alpha_profile(profiles / "alpha.json")
+    beta = {
+        "profile_id": "beta",
+        "profile_layer": "modifier",
+        "display_name": "Beta",
+        "identity_rules": {
+            "beta": {
+                "threshold": 0.4,
+                "summary": "Beta modifier",
+                "secondary_types": ["beta_layer"],
+                "feature_weights": {"has_alpha_panel": 1.0},
+            }
+        },
+        "feature_rules": {
+            "has_alpha_panel": {
+                "positive_terms": ["alpha"],
+                "required_context": ["panel"],
+                "node_kinds": ["Node", "Script", "Scene"],
+            }
+        },
+        "negative_weights": {},
+        "gameplay_loop_templates": {"beta": ["处理 Beta 修饰步骤"]},
+        "module_rules": {"beta": []},
+        "compatible_with": ["alpha_profile"],
+        "suppresses": [],
+    }
+    (profiles / "beta.json").write_text(json.dumps(beta), encoding="utf-8")
+    return profiles
+
+
 class ArchitectureRecoveryTests(unittest.TestCase):
+    def test_evaluate_profile_uses_v2_feature_weights(self):
+        graph = {
+            "nodes": [
+                {"id": "script:res://src/inventory.gd", "kind": "Script", "properties": {"path": "res://src/inventory.gd"}},
+                {"id": "script:res://src/stats.gd", "kind": "Script", "properties": {"path": "res://src/stats.gd"}},
+            ],
+            "edges": [],
+        }
+        profile = {
+            "profile_id": "rpg",
+            "profile_layer": "primary",
+            "identity_rules": {
+                "rpg": {
+                    "threshold": 0.5,
+                    "feature_weights": {"has_inventory": 0.5, "has_stats": 0.5},
+                }
+            },
+            "feature_rules": {
+                "has_inventory": {"positive_terms": ["inventory"], "node_kinds": ["Script"]},
+                "has_stats": {"positive_terms": ["stats"], "node_kinds": ["Script"]},
+            },
+            "negative_weights": {},
+        }
+
+        result = recover_architecture.evaluate_profile(graph, profile)
+
+        self.assertEqual("rpg", result["profile_id"])
+        self.assertEqual(1.0, result["normalized_score"])
+        self.assertEqual(["has_inventory", "has_stats"], [item["feature"] for item in result["matched_features"]])
+
+    def test_evaluate_profile_applies_negative_weights_from_matching_features(self):
+        graph = {
+            "nodes": [
+                {"id": "script:res://src/card.gd", "kind": "Script", "properties": {"path": "res://src/card.gd"}},
+                {"id": "script:res://src/inventory.gd", "kind": "Script", "properties": {"path": "res://src/inventory.gd"}},
+            ],
+            "edges": [],
+        }
+        profile = {
+            "profile_id": "rpg",
+            "profile_layer": "primary",
+            "identity_rules": {
+                "rpg": {
+                    "threshold": 0.5,
+                    "feature_weights": {"has_inventory": 1.0},
+                }
+            },
+            "feature_rules": {
+                "has_inventory": {"positive_terms": ["inventory"], "node_kinds": ["Script"]},
+                "has_card_loop": {"positive_terms": ["card"], "node_kinds": ["Script"]},
+            },
+            "negative_weights": {"has_card_loop": -0.25},
+        }
+
+        result = recover_architecture.evaluate_profile(graph, profile)
+
+        self.assertEqual(0.75, result["raw_score"])
+        self.assertEqual("has_card_loop", result["negative_matches"][0]["feature"])
+
+    def test_evaluate_profile_disqualifies_missing_required_features(self):
+        graph = {
+            "nodes": [
+                {"id": "script:res://src/grid.gd", "kind": "Script", "properties": {"path": "res://src/grid.gd"}},
+            ],
+            "edges": [],
+        }
+        profile = {
+            "profile_id": "tactical",
+            "profile_layer": "primary",
+            "identity_rules": {
+                "tactical": {
+                    "threshold": 0.5,
+                    "feature_weights": {"has_grid": 0.5, "has_command": 0.5},
+                    "required_features": ["has_command"],
+                }
+            },
+            "feature_rules": {
+                "has_grid": {"positive_terms": ["grid"], "node_kinds": ["Script"]},
+                "has_command": {"positive_terms": ["command"], "node_kinds": ["Script"]},
+            },
+            "negative_weights": {},
+        }
+
+        result = recover_architecture.evaluate_profile(graph, profile)
+
+        self.assertTrue(result["disqualified"])
+        self.assertEqual(0.0, result["normalized_score"])
+
+    def test_select_project_identity_returns_primary_modifier_and_flavor(self):
+        profiles = [
+            {"profile_id": "rpg", "compatible_with": ["survival", "story"], "suppresses": []},
+            {"profile_id": "survival", "compatible_with": ["rpg"], "suppresses": []},
+            {"profile_id": "story", "compatible_with": ["rpg"], "suppresses": []},
+        ]
+        evaluations = [
+            {"profile_id": "rpg", "profile_layer": "primary", "normalized_score": 0.8, "confidence": 0.75, "threshold": 0.5, "summary": "RPG", "secondary_types": []},
+            {"profile_id": "survival", "profile_layer": "modifier", "normalized_score": 0.55, "confidence": 0.52, "threshold": 0.45, "summary": "Survival", "secondary_types": []},
+            {"profile_id": "story", "profile_layer": "flavor", "normalized_score": 0.5, "confidence": 0.48, "threshold": 0.4, "summary": "Story", "secondary_types": []},
+        ]
+
+        identity = recover_architecture.select_project_identity(evaluations, profiles)
+
+        self.assertEqual("rpg", identity["primary"]["genre"])
+        self.assertEqual(["survival"], [item["genre"] for item in identity["modifiers"]])
+        self.assertEqual(["story"], [item["genre"] for item in identity["flavors"]])
+
+    def test_select_project_identity_outputs_candidates_for_close_primary_scores(self):
+        profiles = [
+            {"profile_id": "rpg", "compatible_with": [], "suppresses": []},
+            {"profile_id": "card", "compatible_with": [], "suppresses": []},
+        ]
+        evaluations = [
+            {"profile_id": "rpg", "profile_layer": "primary", "normalized_score": 0.81, "confidence": 0.75, "threshold": 0.5, "summary": "RPG", "secondary_types": []},
+            {"profile_id": "card", "profile_layer": "primary", "normalized_score": 0.76, "confidence": 0.72, "threshold": 0.5, "summary": "Card", "secondary_types": []},
+        ]
+
+        identity = recover_architecture.select_project_identity(evaluations, profiles)
+
+        self.assertEqual(["rpg", "card"], [item["genre"] for item in identity["primary_candidates"]])
+
     def test_recovery_without_profile_does_not_infer_specific_identity(self):
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
@@ -212,6 +365,30 @@ class ArchitectureRecoveryTests(unittest.TestCase):
 
             summary = json.loads((layer4 / "architecture_summary.json").read_text(encoding="utf-8"))["data"]
             self.assertIn("forbidden_alpha_term", " ".join(summary["report_quality"]["evidence_noise_warnings"]))
+
+    def test_recovery_with_profile_dir_writes_v2_artifacts(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            layer2, layer3 = write_layer_inputs(root, alpha_graph())
+            profiles = profile_dir(root)
+            layer4 = root / "layer4"
+
+            recover_architecture.recover(layer2_dir=layer2, layer3_dir=layer3, output_dir=layer4, profile_dir=profiles)
+
+            summary = json.loads((layer4 / "architecture_summary.json").read_text(encoding="utf-8"))["data"]
+            evaluation = json.loads((layer4 / "profile_evaluation.json").read_text(encoding="utf-8"))["data"]
+            identity = json.loads((layer4 / "project_identity.json").read_text(encoding="utf-8"))["data"]
+            report = (layer4 / "architecture_report.md").read_text(encoding="utf-8")
+            self.assertEqual(2, len(evaluation["evaluations"]))
+            self.assertEqual("alpha_project", summary["project_identity"]["primary_type"])
+            self.assertEqual("alpha_project", summary["project_identity_v2"]["primary"]["genre"])
+            self.assertEqual(["beta"], [item["genre"] for item in identity["modifiers"]])
+            self.assertIn("处理 Beta 修饰步骤", [item["title"] for item in summary["gameplay_loop"]])
+            self.assertIn("主类型", report)
+            self.assertIn("修饰类型", report)
+            self.assertTrue((layer4 / "gameplay_loop.json").exists())
+            self.assertTrue((layer4 / "module_responsibilities.json").exists())
+            self.assertEqual([], validate_architecture.validate_artifacts(layer4))
 
 
 if __name__ == "__main__":

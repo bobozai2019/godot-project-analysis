@@ -1,0 +1,197 @@
+{
+  "schema_version": "layer4_profile.v2",
+  "profile_id": "action",
+  "profile_layer": "primary",
+  "display_name": "Action",
+  "identity_rules": {
+    "action": {
+      "threshold": 0.5,
+      "summary": "以实时输入、移动、攻击和反馈为核心的动作游戏。",
+      "secondary_types": [
+        "real_time",
+        "direct_control",
+        "combat_driven"
+      ],
+      "feature_weights": {
+        "has_move": 0.25,
+        "has_attack": 0.25,
+        "has_input": 0.2,
+        "has_hitbox": 0.15,
+        "has_dash": 0.15
+      }
+    }
+  },
+  "feature_rules": {
+    "has_move": {
+      "positive_terms": [
+        "move_and_slide",
+        "velocity",
+        "acceleration"
+      ],
+      "node_kinds": [
+        "Script"
+      ],
+      "weights": {
+        "action": 0.25
+      }
+    },
+    "has_attack": {
+      "positive_terms": [
+        "attack",
+        "damage",
+        "combo"
+      ],
+      "node_kinds": [
+        "Script",
+        "Node"
+      ],
+      "weights": {
+        "action": 0.25
+      }
+    },
+    "has_input": {
+      "positive_terms": [
+        "_input",
+        "_physics_process",
+        "Input."
+      ],
+      "node_kinds": [
+        "Script"
+      ],
+      "weights": {
+        "action": 0.2
+      }
+    },
+    "has_hitbox": {
+      "positive_terms": [
+        "hitbox",
+        "hurtbox",
+        "Area2D",
+        "CollisionShape2D"
+      ],
+      "node_kinds": [
+        "Scene",
+        "Node",
+        "Script"
+      ],
+      "weights": {
+        "action": 0.15
+      }
+    },
+    "has_dash": {
+      "positive_terms": [
+        "dash",
+        "roll",
+        "evade"
+      ],
+      "node_kinds": [
+        "Script",
+        "Node"
+      ],
+      "weights": {
+        "action": 0.15
+      }
+    }
+  },
+  "negative_weights": {
+    "has_menu_command_loop": -0.1
+  },
+  "gameplay_loop_templates": {
+    "action": [
+      {
+        "title": "移动与躲避",
+        "text": "移动与躲避",
+        "evidence_features": [
+          "has_move",
+          "has_attack",
+          "has_input",
+          "has_hitbox",
+          "has_dash"
+        ]
+      },
+      {
+        "title": "观察敌人与环境",
+        "text": "观察敌人与环境",
+        "evidence_features": [
+          "has_move",
+          "has_attack",
+          "has_input",
+          "has_hitbox",
+          "has_dash"
+        ]
+      },
+      {
+        "title": "执行攻击/技能",
+        "text": "执行攻击/技能",
+        "evidence_features": [
+          "has_move",
+          "has_attack",
+          "has_input",
+          "has_hitbox",
+          "has_dash"
+        ]
+      },
+      {
+        "title": "结算命中与反馈",
+        "text": "结算命中与反馈",
+        "evidence_features": [
+          "has_move",
+          "has_attack",
+          "has_input",
+          "has_hitbox",
+          "has_dash"
+        ]
+      },
+      {
+        "title": "继续战斗循环",
+        "text": "继续战斗循环",
+        "evidence_features": [
+          "has_move",
+          "has_attack",
+          "has_input",
+          "has_hitbox",
+          "has_dash"
+        ]
+      }
+    ]
+  },
+  "module_rules": {
+    "action": [
+      {
+        "module": "Player Controller",
+        "responsibility": "承载角色移动与输入响应",
+        "terms": [
+          "player",
+          "controller",
+          "_input"
+        ]
+      },
+      {
+        "module": "Hitbox And Damage",
+        "responsibility": "承载命中检测与伤害结算",
+        "terms": [
+          "hitbox",
+          "hurtbox",
+          "damage"
+        ]
+      },
+      {
+        "module": "Combat Feedback",
+        "responsibility": "承载动画、特效与数值反馈",
+        "terms": [
+          "vfx",
+          "damage",
+          "animation"
+        ]
+      }
+    ]
+  },
+  "compatible_with": [
+    "rpg",
+    "multiplayer",
+    "horror",
+    "story",
+    "survival"
+  ],
+  "suppresses": []
+}

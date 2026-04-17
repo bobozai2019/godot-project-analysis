@@ -1,0 +1,4 @@
+interface:
+  display_name: "Godot Project Analysis"
+  short_description: "Run the full Godot Layer 0-Layer 4 analysis pipeline"
+  default_prompt: "Use $godot-project-analysis to analyze a Godot project path and generate architecture recovery reports."

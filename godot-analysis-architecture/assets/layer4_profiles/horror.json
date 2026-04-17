@@ -1,0 +1,169 @@
+{
+  "schema_version": "layer4_profile.v2",
+  "profile_id": "horror",
+  "profile_layer": "flavor",
+  "display_name": "Horror",
+  "identity_rules": {
+    "horror": {
+      "threshold": 0.4,
+      "summary": "以压迫、怪物威胁、逃生与恐怖氛围为特征的恐怖主题。",
+      "secondary_types": [
+        "tension",
+        "escape",
+        "threat_driven"
+      ],
+      "required_features": [
+        "has_fear"
+      ],
+      "feature_weights": {
+        "has_dark": 0.3,
+        "has_fear": 0.25,
+        "has_monster": 0.2,
+        "has_escape": 0.15,
+        "has_sound": 0.1
+      }
+    }
+  },
+  "feature_rules": {
+    "has_dark": {
+      "positive_terms": [
+        "dark",
+        "shadow"
+      ],
+      "node_kinds": [
+        "Scene",
+        "Node",
+        "Resource"
+      ],
+      "weights": {
+        "horror": 0.3
+      }
+    },
+    "has_fear": {
+      "positive_terms": [
+        "fear",
+        "panic"
+      ],
+      "node_kinds": [
+        "Script",
+        "UI",
+        "Node"
+      ],
+      "weights": {
+        "horror": 0.25
+      }
+    },
+    "has_monster": {
+      "positive_terms": [
+        "monster",
+        "ghost"
+      ],
+      "node_kinds": [
+        "Scene",
+        "Node",
+        "Script"
+      ],
+      "weights": {
+        "horror": 0.2
+      }
+    },
+    "has_escape": {
+      "positive_terms": [
+        "escape",
+        "hide"
+      ],
+      "node_kinds": [
+        "Script",
+        "Scene",
+        "Node"
+      ],
+      "weights": {
+        "horror": 0.15
+      }
+    },
+    "has_sound": {
+      "positive_terms": [
+        "scream",
+        "heartbeat"
+      ],
+      "node_kinds": [
+        "Resource",
+        "Script",
+        "Node"
+      ],
+      "weights": {
+        "horror": 0.1
+      }
+    }
+  },
+  "negative_weights": {},
+  "gameplay_loop_templates": {
+    "horror": [
+      {
+        "title": "探索危险空间",
+        "text": "探索危险空间",
+        "evidence_features": [
+          "has_dark",
+          "has_fear",
+          "has_monster",
+          "has_escape",
+          "has_sound"
+        ]
+      },
+      {
+        "title": "感知威胁并规避",
+        "text": "感知威胁并规避",
+        "evidence_features": [
+          "has_dark",
+          "has_fear",
+          "has_monster",
+          "has_escape",
+          "has_sound"
+        ]
+      },
+      {
+        "title": "处理资源或谜题",
+        "text": "处理资源或谜题",
+        "evidence_features": [
+          "has_dark",
+          "has_fear",
+          "has_monster",
+          "has_escape",
+          "has_sound"
+        ]
+      },
+      {
+        "title": "逃离或对抗怪物",
+        "text": "逃离或对抗怪物",
+        "evidence_features": [
+          "has_dark",
+          "has_fear",
+          "has_monster",
+          "has_escape",
+          "has_sound"
+        ]
+      }
+    ]
+  },
+  "module_rules": {
+    "horror": [
+      {
+        "module": "Threat Presentation",
+        "responsibility": "承载恐怖氛围与威胁反馈",
+        "terms": [
+          "dark",
+          "fear",
+          "monster"
+        ]
+      }
+    ]
+  },
+  "compatible_with": [
+    "action",
+    "puzzle",
+    "story",
+    "survival",
+    "stealth"
+  ],
+  "suppresses": []
+}

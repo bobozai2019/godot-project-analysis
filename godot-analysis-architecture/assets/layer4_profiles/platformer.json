@@ -1,0 +1,168 @@
+{
+  "schema_version": "layer4_profile.v2",
+  "profile_id": "platformer",
+  "profile_layer": "primary",
+  "display_name": "Platformer",
+  "identity_rules": {
+    "platformer": {
+      "threshold": 0.5,
+      "summary": "以跳跃、重力和关卡推进为核心的平台跳跃游戏。",
+      "secondary_types": [
+        "jump_driven",
+        "level_progression",
+        "physics_platforming"
+      ],
+      "feature_weights": {
+        "has_jump": 0.3,
+        "has_gravity": 0.25,
+        "has_platform": 0.2,
+        "has_enemy": 0.15,
+        "has_level": 0.1
+      }
+    }
+  },
+  "feature_rules": {
+    "has_jump": {
+      "positive_terms": [
+        "jump",
+        "double_jump",
+        "air_jump"
+      ],
+      "node_kinds": [
+        "Script",
+        "Node"
+      ],
+      "weights": {
+        "platformer": 0.3
+      }
+    },
+    "has_gravity": {
+      "positive_terms": [
+        "gravity",
+        "fall"
+      ],
+      "node_kinds": [
+        "Script",
+        "Node"
+      ],
+      "weights": {
+        "platformer": 0.25
+      }
+    },
+    "has_platform": {
+      "positive_terms": [
+        "platform",
+        "ledge"
+      ],
+      "node_kinds": [
+        "Scene",
+        "Node"
+      ],
+      "weights": {
+        "platformer": 0.2
+      }
+    },
+    "has_enemy": {
+      "positive_terms": [
+        "enemy"
+      ],
+      "node_kinds": [
+        "Scene",
+        "Node",
+        "Script"
+      ],
+      "weights": {
+        "platformer": 0.15
+      }
+    },
+    "has_level": {
+      "positive_terms": [
+        "level",
+        "checkpoint"
+      ],
+      "node_kinds": [
+        "Scene",
+        "Node",
+        "Script"
+      ],
+      "weights": {
+        "platformer": 0.1
+      }
+    }
+  },
+  "negative_weights": {},
+  "gameplay_loop_templates": {
+    "platformer": [
+      {
+        "title": "移动与跳跃通过地形",
+        "text": "移动与跳跃通过地形",
+        "evidence_features": [
+          "has_jump",
+          "has_gravity",
+          "has_platform",
+          "has_enemy",
+          "has_level"
+        ]
+      },
+      {
+        "title": "规避陷阱与敌人",
+        "text": "规避陷阱与敌人",
+        "evidence_features": [
+          "has_jump",
+          "has_gravity",
+          "has_platform",
+          "has_enemy",
+          "has_level"
+        ]
+      },
+      {
+        "title": "收集物品或到达检查点",
+        "text": "收集物品或到达检查点",
+        "evidence_features": [
+          "has_jump",
+          "has_gravity",
+          "has_platform",
+          "has_enemy",
+          "has_level"
+        ]
+      },
+      {
+        "title": "推进到下一段关卡",
+        "text": "推进到下一段关卡",
+        "evidence_features": [
+          "has_jump",
+          "has_gravity",
+          "has_platform",
+          "has_enemy",
+          "has_level"
+        ]
+      }
+    ]
+  },
+  "module_rules": {
+    "platformer": [
+      {
+        "module": "Jump And Gravity",
+        "responsibility": "承载跳跃与重力行为",
+        "terms": [
+          "jump",
+          "gravity"
+        ]
+      },
+      {
+        "module": "Level Progression",
+        "responsibility": "承载关卡推进与检查点",
+        "terms": [
+          "level",
+          "checkpoint"
+        ]
+      }
+    ]
+  },
+  "compatible_with": [
+    "action",
+    "story",
+    "multiplayer"
+  ],
+  "suppresses": []
+}

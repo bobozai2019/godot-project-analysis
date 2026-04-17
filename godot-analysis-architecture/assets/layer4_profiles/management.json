@@ -1,0 +1,190 @@
+{
+  "schema_version": "layer4_profile.v2",
+  "profile_id": "management",
+  "profile_layer": "modifier",
+  "display_name": "Management",
+  "identity_rules": {
+    "management": {
+      "threshold": 0.45,
+      "summary": "以资源、生产、建造和调度为核心的经营特征。",
+      "secondary_types": [
+        "resource_management",
+        "economy",
+        "planning"
+      ],
+      "feature_weights": {
+        "has_resource": 0.3,
+        "has_production": 0.25,
+        "has_building": 0.2,
+        "has_trade": 0.15,
+        "has_population": 0.1
+      }
+    }
+  },
+  "feature_rules": {
+    "has_resource": {
+      "positive_terms": [
+        "resource",
+        "gold",
+        "food",
+        "wood"
+      ],
+      "node_kinds": [
+        "Script",
+        "Resource",
+        "Node"
+      ],
+      "weights": {
+        "management": 0.3
+      }
+    },
+    "has_production": {
+      "positive_terms": [
+        "production",
+        "factory",
+        "recipe"
+      ],
+      "node_kinds": [
+        "Scene",
+        "Script",
+        "Resource"
+      ],
+      "weights": {
+        "management": 0.25
+      }
+    },
+    "has_building": {
+      "positive_terms": [
+        "building",
+        "construct",
+        "upgrade"
+      ],
+      "node_kinds": [
+        "Scene",
+        "Script",
+        "Node"
+      ],
+      "weights": {
+        "management": 0.2
+      }
+    },
+    "has_trade": {
+      "positive_terms": [
+        "trade",
+        "market",
+        "buy",
+        "sell"
+      ],
+      "node_kinds": [
+        "Scene",
+        "Script",
+        "Node"
+      ],
+      "weights": {
+        "management": 0.15
+      }
+    },
+    "has_population": {
+      "positive_terms": [
+        "population",
+        "citizen",
+        "worker"
+      ],
+      "node_kinds": [
+        "Scene",
+        "Script",
+        "Node"
+      ],
+      "weights": {
+        "management": 0.1
+      }
+    }
+  },
+  "negative_weights": {},
+  "gameplay_loop_templates": {
+    "management": [
+      {
+        "title": "查看资源与状态",
+        "text": "查看资源与状态",
+        "evidence_features": [
+          "has_resource",
+          "has_production",
+          "has_building",
+          "has_trade",
+          "has_population"
+        ]
+      },
+      {
+        "title": "进行建造/生产/调度决策",
+        "text": "进行建造/生产/调度决策",
+        "evidence_features": [
+          "has_resource",
+          "has_production",
+          "has_building",
+          "has_trade",
+          "has_population"
+        ]
+      },
+      {
+        "title": "观察资源与产出变化",
+        "text": "观察资源与产出变化",
+        "evidence_features": [
+          "has_resource",
+          "has_production",
+          "has_building",
+          "has_trade",
+          "has_population"
+        ]
+      },
+      {
+        "title": "调整配置并继续优化",
+        "text": "调整配置并继续优化",
+        "evidence_features": [
+          "has_resource",
+          "has_production",
+          "has_building",
+          "has_trade",
+          "has_population"
+        ]
+      }
+    ]
+  },
+  "module_rules": {
+    "management": [
+      {
+        "module": "Resource Economy",
+        "responsibility": "承载资源流入流出",
+        "terms": [
+          "resource",
+          "gold",
+          "food"
+        ]
+      },
+      {
+        "module": "Production Chain",
+        "responsibility": "承载生产与制造",
+        "terms": [
+          "production",
+          "recipe"
+        ]
+      },
+      {
+        "module": "Building Planner",
+        "responsibility": "承载建造与升级",
+        "terms": [
+          "building",
+          "construct",
+          "upgrade"
+        ]
+      }
+    ]
+  },
+  "compatible_with": [
+    "tactical",
+    "city_builder",
+    "simulation",
+    "survival",
+    "sandbox"
+  ],
+  "suppresses": []
+}

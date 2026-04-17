@@ -1,0 +1,175 @@
+{
+  "schema_version": "layer4_profile.v2",
+  "profile_id": "multiplayer",
+  "profile_layer": "modifier",
+  "display_name": "Multiplayer",
+  "identity_rules": {
+    "multiplayer": {
+      "threshold": 0.45,
+      "summary": "以网络同步、多玩家会话和房间/服务器连接为核心的多人特征。",
+      "secondary_types": [
+        "networked",
+        "session_based",
+        "synchronized"
+      ],
+      "required_features": [
+        "has_network"
+      ],
+      "feature_weights": {
+        "has_network": 0.3,
+        "has_sync": 0.25,
+        "has_player": 0.2,
+        "has_lobby": 0.15,
+        "has_server": 0.1
+      }
+    }
+  },
+  "feature_rules": {
+    "has_network": {
+      "positive_terms": [
+        "network",
+        "multiplayer"
+      ],
+      "node_kinds": [
+        "Script",
+        "Scene",
+        "Node"
+      ],
+      "weights": {
+        "multiplayer": 0.3
+      }
+    },
+    "has_sync": {
+      "positive_terms": [
+        "sync",
+        "rpc"
+      ],
+      "node_kinds": [
+        "Script"
+      ],
+      "weights": {
+        "multiplayer": 0.25
+      }
+    },
+    "has_player": {
+      "positive_terms": [
+        "player"
+      ],
+      "node_kinds": [
+        "Scene",
+        "Node",
+        "Script"
+      ],
+      "weights": {
+        "multiplayer": 0.2
+      }
+    },
+    "has_lobby": {
+      "positive_terms": [
+        "lobby",
+        "room"
+      ],
+      "node_kinds": [
+        "Scene",
+        "Node",
+        "Script"
+      ],
+      "weights": {
+        "multiplayer": 0.15
+      }
+    },
+    "has_server": {
+      "positive_terms": [
+        "server",
+        "client"
+      ],
+      "node_kinds": [
+        "Script",
+        "Node"
+      ],
+      "weights": {
+        "multiplayer": 0.1
+      }
+    }
+  },
+  "negative_weights": {},
+  "gameplay_loop_templates": {
+    "multiplayer": [
+      {
+        "title": "进入房间或连接会话",
+        "text": "进入房间或连接会话",
+        "evidence_features": [
+          "has_network",
+          "has_sync",
+          "has_player",
+          "has_lobby",
+          "has_server"
+        ]
+      },
+      {
+        "title": "同步玩家状态",
+        "text": "同步玩家状态",
+        "evidence_features": [
+          "has_network",
+          "has_sync",
+          "has_player",
+          "has_lobby",
+          "has_server"
+        ]
+      },
+      {
+        "title": "进行协作或对抗玩法",
+        "text": "进行协作或对抗玩法",
+        "evidence_features": [
+          "has_network",
+          "has_sync",
+          "has_player",
+          "has_lobby",
+          "has_server"
+        ]
+      },
+      {
+        "title": "结算并返回大厅或下一局",
+        "text": "结算并返回大厅或下一局",
+        "evidence_features": [
+          "has_network",
+          "has_sync",
+          "has_player",
+          "has_lobby",
+          "has_server"
+        ]
+      }
+    ]
+  },
+  "module_rules": {
+    "multiplayer": [
+      {
+        "module": "Lobby And Session",
+        "responsibility": "承载房间、匹配与会话",
+        "terms": [
+          "lobby",
+          "room",
+          "server"
+        ]
+      },
+      {
+        "module": "Sync Layer",
+        "responsibility": "承载状态同步与网络事件",
+        "terms": [
+          "sync",
+          "rpc",
+          "network"
+        ]
+      }
+    ]
+  },
+  "compatible_with": [
+    "action",
+    "shooter",
+    "sports",
+    "racing",
+    "rpg",
+    "card"
+  ],
+  "suppresses": []
+}

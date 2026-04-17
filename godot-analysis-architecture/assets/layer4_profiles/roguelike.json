@@ -1,0 +1,182 @@
+{
+  "schema_version": "layer4_profile.v2",
+  "profile_id": "roguelike",
+  "profile_layer": "modifier",
+  "display_name": "Roguelike",
+  "identity_rules": {
+    "roguelike": {
+      "threshold": 0.45,
+      "summary": "以 run 循环、随机性、奖励与重开推进为核心的 roguelike 结构。",
+      "secondary_types": [
+        "run_progression",
+        "randomized",
+        "session_based"
+      ],
+      "feature_weights": {
+        "has_run": 0.3,
+        "has_random": 0.2,
+        "has_reward": 0.2,
+        "has_unlock": 0.2,
+        "has_restart": 0.1
+      }
+    }
+  },
+  "feature_rules": {
+    "has_run": {
+      "positive_terms": [
+        "run",
+        "floor"
+      ],
+      "node_kinds": [
+        "Script",
+        "Node",
+        "Resource"
+      ],
+      "weights": {
+        "roguelike": 0.3
+      }
+    },
+    "has_random": {
+      "positive_terms": [
+        "random",
+        "seed",
+        "rng"
+      ],
+      "node_kinds": [
+        "Script",
+        "Resource"
+      ],
+      "weights": {
+        "roguelike": 0.2
+      }
+    },
+    "has_reward": {
+      "positive_terms": [
+        "reward",
+        "loot_choice"
+      ],
+      "node_kinds": [
+        "Scene",
+        "Node",
+        "Script"
+      ],
+      "weights": {
+        "roguelike": 0.2
+      }
+    },
+    "has_unlock": {
+      "positive_terms": [
+        "unlock",
+        "meta_progress"
+      ],
+      "node_kinds": [
+        "Script",
+        "Resource",
+        "Node"
+      ],
+      "weights": {
+        "roguelike": 0.2
+      }
+    },
+    "has_restart": {
+      "positive_terms": [
+        "restart",
+        "new_run"
+      ],
+      "node_kinds": [
+        "Script",
+        "Node"
+      ],
+      "weights": {
+        "roguelike": 0.1
+      }
+    }
+  },
+  "negative_weights": {},
+  "gameplay_loop_templates": {
+    "roguelike": [
+      {
+        "title": "开始一局",
+        "text": "开始一局",
+        "evidence_features": [
+          "has_run",
+          "has_random",
+          "has_reward",
+          "has_unlock",
+          "has_restart"
+        ]
+      },
+      {
+        "title": "推进随机房间或层数",
+        "text": "推进随机房间或层数",
+        "evidence_features": [
+          "has_run",
+          "has_random",
+          "has_reward",
+          "has_unlock",
+          "has_restart"
+        ]
+      },
+      {
+        "title": "获得奖励或成长",
+        "text": "获得奖励或成长",
+        "evidence_features": [
+          "has_run",
+          "has_random",
+          "has_reward",
+          "has_unlock",
+          "has_restart"
+        ]
+      },
+      {
+        "title": "死亡/通关后重开或解锁",
+        "text": "死亡/通关后重开或解锁",
+        "evidence_features": [
+          "has_run",
+          "has_random",
+          "has_reward",
+          "has_unlock",
+          "has_restart"
+        ]
+      },
+      {
+        "title": "开始下一局",
+        "text": "开始下一局",
+        "evidence_features": [
+          "has_run",
+          "has_random",
+          "has_reward",
+          "has_unlock",
+          "has_restart"
+        ]
+      }
+    ]
+  },
+  "module_rules": {
+    "roguelike": [
+      {
+        "module": "Run Progression",
+        "responsibility": "承载每局推进与层数/房间结构",
+        "terms": [
+          "run",
+          "floor"
+        ]
+      },
+      {
+        "module": "Reward Loop",
+        "responsibility": "承载奖励与成长分支",
+        "terms": [
+          "reward",
+          "unlock"
+        ]
+      }
+    ]
+  },
+  "compatible_with": [
+    "card",
+    "rpg",
+    "action",
+    "survival"
+  ],
+  "suppresses": []
+}

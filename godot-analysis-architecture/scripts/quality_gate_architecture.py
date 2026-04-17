@@ -115,6 +115,21 @@ def run_gate(layer3_dir: Path, layer4_dir: Path) -> list[str]:
     if not summary.get("module_map", {}).get("mermaid", "").startswith("flowchart TD"):
         failures.append("module_map.mermaid is missing or invalid")
 
+    profile_evaluation_path = layer4_dir / "profile_evaluation.json"
+    if profile_evaluation_path.exists():
+        evaluations = read_json(profile_evaluation_path).get("data", {}).get("evaluations", [])
+        if not evaluations:
+            failures.append("profile_evaluation has no evaluations")
+        project_identity_path = layer4_dir / "project_identity.json"
+        if not project_identity_path.exists():
+            failures.append("project_identity.json is missing for multi-profile output")
+        else:
+            identity_v2 = read_json(project_identity_path).get("data", {})
+            if not identity_v2.get("primary") and not identity_v2.get("primary_candidates"):
+                failures.append("project_identity has neither primary nor primary_candidates")
+        if "project_identity_v2" not in summary:
+            failures.append("architecture_summary missing project_identity_v2 for multi-profile output")
+
     for entity_id, annotation in annotations.items():
         if "scene_instance" in annotation.get("semantic_roles", []) and annotation.get("contained_roles"):
             if annotation.get("semantic_roles") != ["scene_instance"]:

@@ -1,0 +1,191 @@
+{
+  "schema_version": "layer4_profile.v2",
+  "profile_id": "city_builder",
+  "profile_layer": "modifier",
+  "display_name": "City Builder",
+  "identity_rules": {
+    "city_builder": {
+      "threshold": 0.45,
+      "summary": "以城市规划、道路和基础设施网络为核心的城建特征。",
+      "secondary_types": [
+        "planning",
+        "infrastructure",
+        "simulation"
+      ],
+      "feature_weights": {
+        "has_zone": 0.25,
+        "has_road": 0.25,
+        "has_population": 0.2,
+        "has_service": 0.15,
+        "has_budget": 0.15
+      }
+    }
+  },
+  "feature_rules": {
+    "has_zone": {
+      "positive_terms": [
+        "zone",
+        "district"
+      ],
+      "node_kinds": [
+        "Scene",
+        "Script",
+        "Node"
+      ],
+      "weights": {
+        "city_builder": 0.25
+      }
+    },
+    "has_road": {
+      "positive_terms": [
+        "road",
+        "power",
+        "water"
+      ],
+      "node_kinds": [
+        "Scene",
+        "Script",
+        "Node",
+        "Resource"
+      ],
+      "weights": {
+        "city_builder": 0.25
+      }
+    },
+    "has_population": {
+      "positive_terms": [
+        "citizen",
+        "housing",
+        "employment"
+      ],
+      "node_kinds": [
+        "Script",
+        "Node",
+        "Resource"
+      ],
+      "weights": {
+        "city_builder": 0.2
+      }
+    },
+    "has_service": {
+      "positive_terms": [
+        "hospital",
+        "police",
+        "fire",
+        "school"
+      ],
+      "node_kinds": [
+        "Scene",
+        "Script",
+        "Node"
+      ],
+      "weights": {
+        "city_builder": 0.15
+      }
+    },
+    "has_budget": {
+      "positive_terms": [
+        "budget",
+        "tax",
+        "income",
+        "expense"
+      ],
+      "node_kinds": [
+        "Script",
+        "Resource",
+        "Node"
+      ],
+      "weights": {
+        "city_builder": 0.15
+      }
+    }
+  },
+  "negative_weights": {},
+  "gameplay_loop_templates": {
+    "city_builder": [
+      {
+        "title": "查看城市与需求",
+        "text": "查看城市与需求",
+        "evidence_features": [
+          "has_zone",
+          "has_road",
+          "has_population",
+          "has_service",
+          "has_budget"
+        ]
+      },
+      {
+        "title": "规划道路/分区/设施",
+        "text": "规划道路/分区/设施",
+        "evidence_features": [
+          "has_zone",
+          "has_road",
+          "has_population",
+          "has_service",
+          "has_budget"
+        ]
+      },
+      {
+        "title": "放置或升级建筑",
+        "text": "放置或升级建筑",
+        "evidence_features": [
+          "has_zone",
+          "has_road",
+          "has_population",
+          "has_service",
+          "has_budget"
+        ]
+      },
+      {
+        "title": "观察覆盖与人口变化",
+        "text": "观察覆盖与人口变化",
+        "evidence_features": [
+          "has_zone",
+          "has_road",
+          "has_population",
+          "has_service",
+          "has_budget"
+        ]
+      },
+      {
+        "title": "调整预算与服务",
+        "text": "调整预算与服务",
+        "evidence_features": [
+          "has_zone",
+          "has_road",
+          "has_population",
+          "has_service",
+          "has_budget"
+        ]
+      }
+    ]
+  },
+  "module_rules": {
+    "city_builder": [
+      {
+        "module": "Infrastructure Network",
+        "responsibility": "承载道路、电力和供水网络",
+        "terms": [
+          "road",
+          "power",
+          "water"
+        ]
+      },
+      {
+        "module": "Population Simulation",
+        "responsibility": "承载市民需求与反馈",
+        "terms": [
+          "citizen",
+          "housing",
+          "employment"
+        ]
+      }
+    ]
+  },
+  "compatible_with": [
+    "management",
+    "simulation",
+    "sandbox"
+  ],
+  "suppresses": []
+}

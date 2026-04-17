@@ -1,0 +1,195 @@
+{
+  "schema_version": "layer4_profile.v2",
+  "profile_id": "card",
+  "profile_layer": "primary",
+  "display_name": "Card",
+  "identity_rules": {
+    "card": {
+      "threshold": 0.5,
+      "summary": "以卡牌、手牌、抽弃牌循环和回合操作为核心的卡牌玩法。",
+      "secondary_types": [
+        "ui_command",
+        "turn_based",
+        "deck_interaction"
+      ],
+      "feature_weights": {
+        "has_card": 0.3,
+        "has_hand": 0.2,
+        "has_draw": 0.2,
+        "has_discard": 0.2,
+        "has_turn": 0.1
+      }
+    }
+  },
+  "feature_rules": {
+    "has_card": {
+      "positive_terms": [
+        "card",
+        "cards"
+      ],
+      "node_kinds": [
+        "Scene",
+        "Node",
+        "Script",
+        "Resource"
+      ],
+      "weights": {
+        "card": 0.3
+      }
+    },
+    "has_hand": {
+      "positive_terms": [
+        "hand",
+        "deck",
+        "player_hand"
+      ],
+      "node_kinds": [
+        "Scene",
+        "Node",
+        "Script"
+      ],
+      "weights": {
+        "card": 0.2
+      }
+    },
+    "has_draw": {
+      "positive_terms": [
+        "draw",
+        "draw_pile"
+      ],
+      "node_kinds": [
+        "Scene",
+        "Node",
+        "Script"
+      ],
+      "weights": {
+        "card": 0.2
+      }
+    },
+    "has_discard": {
+      "positive_terms": [
+        "discard",
+        "exhaust"
+      ],
+      "node_kinds": [
+        "Scene",
+        "Node",
+        "Script"
+      ],
+      "weights": {
+        "card": 0.2
+      }
+    },
+    "has_turn": {
+      "positive_terms": [
+        "end_turn",
+        "turn",
+        "next_turn"
+      ],
+      "node_kinds": [
+        "Script",
+        "Node"
+      ],
+      "weights": {
+        "card": 0.1
+      }
+    }
+  },
+  "negative_weights": {
+    "has_direct_action_motion": -0.15
+  },
+  "gameplay_loop_templates": {
+    "card": [
+      {
+        "title": "观察手牌与状态",
+        "text": "观察手牌与状态",
+        "evidence_features": [
+          "has_card",
+          "has_hand",
+          "has_draw",
+          "has_discard",
+          "has_turn"
+        ]
+      },
+      {
+        "title": "选择卡牌或目标",
+        "text": "选择卡牌或目标",
+        "evidence_features": [
+          "has_card",
+          "has_hand",
+          "has_draw",
+          "has_discard",
+          "has_turn"
+        ]
+      },
+      {
+        "title": "打出卡牌并结算",
+        "text": "打出卡牌并结算",
+        "evidence_features": [
+          "has_card",
+          "has_hand",
+          "has_draw",
+          "has_discard",
+          "has_turn"
+        ]
+      },
+      {
+        "title": "更新牌组与资源",
+        "text": "更新牌组与资源",
+        "evidence_features": [
+          "has_card",
+          "has_hand",
+          "has_draw",
+          "has_discard",
+          "has_turn"
+        ]
+      },
+      {
+        "title": "结束回合并进入下一回合",
+        "text": "结束回合并进入下一回合",
+        "evidence_features": [
+          "has_card",
+          "has_hand",
+          "has_draw",
+          "has_discard",
+          "has_turn"
+        ]
+      }
+    ]
+  },
+  "module_rules": {
+    "card": [
+      {
+        "module": "Card Scene System",
+        "responsibility": "承载卡牌对象与展示",
+        "terms": [
+          "card"
+        ]
+      },
+      {
+        "module": "Deck And Hand UI",
+        "responsibility": "承载手牌、牌堆与选择",
+        "terms": [
+          "hand",
+          "deck",
+          "draw",
+          "discard"
+        ]
+      },
+      {
+        "module": "Turn Controller",
+        "responsibility": "承载回合推进",
+        "terms": [
+          "turn",
+          "end_turn"
+        ]
+      }
+    ]
+  },
+  "compatible_with": [
+    "roguelike",
+    "story",
+    "multiplayer"
+  ],
+  "suppresses": []
+}

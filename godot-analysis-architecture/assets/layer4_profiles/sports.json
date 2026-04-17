@@ -1,0 +1,169 @@
+{
+  "schema_version": "layer4_profile.v2",
+  "profile_id": "sports",
+  "profile_layer": "primary",
+  "display_name": "Sports",
+  "identity_rules": {
+    "sports": {
+      "threshold": 0.5,
+      "summary": "以球类/分数/队伍/比赛流程为核心的体育竞技游戏。",
+      "secondary_types": [
+        "score_driven",
+        "match_based",
+        "team_competition"
+      ],
+      "feature_weights": {
+        "has_ball": 0.3,
+        "has_score": 0.25,
+        "has_team": 0.2,
+        "has_match": 0.15,
+        "has_timer": 0.1
+      }
+    }
+  },
+  "feature_rules": {
+    "has_ball": {
+      "positive_terms": [
+        "ball",
+        "puck"
+      ],
+      "node_kinds": [
+        "Scene",
+        "Node",
+        "Script"
+      ],
+      "weights": {
+        "sports": 0.3
+      }
+    },
+    "has_score": {
+      "positive_terms": [
+        "score"
+      ],
+      "node_kinds": [
+        "Script",
+        "Node",
+        "UI"
+      ],
+      "weights": {
+        "sports": 0.25
+      }
+    },
+    "has_team": {
+      "positive_terms": [
+        "team"
+      ],
+      "node_kinds": [
+        "Script",
+        "Node",
+        "Resource"
+      ],
+      "weights": {
+        "sports": 0.2
+      }
+    },
+    "has_match": {
+      "positive_terms": [
+        "match",
+        "round"
+      ],
+      "node_kinds": [
+        "Script",
+        "Scene",
+        "Node"
+      ],
+      "weights": {
+        "sports": 0.15
+      }
+    },
+    "has_timer": {
+      "positive_terms": [
+        "timer",
+        "clock"
+      ],
+      "node_kinds": [
+        "Node",
+        "Script",
+        "UI"
+      ],
+      "weights": {
+        "sports": 0.1
+      }
+    }
+  },
+  "negative_weights": {},
+  "gameplay_loop_templates": {
+    "sports": [
+      {
+        "title": "开始比赛",
+        "text": "开始比赛",
+        "evidence_features": [
+          "has_ball",
+          "has_score",
+          "has_team",
+          "has_match",
+          "has_timer"
+        ]
+      },
+      {
+        "title": "控制队伍/角色争取目标",
+        "text": "控制队伍/角色争取目标",
+        "evidence_features": [
+          "has_ball",
+          "has_score",
+          "has_team",
+          "has_match",
+          "has_timer"
+        ]
+      },
+      {
+        "title": "更新分数与时间",
+        "text": "更新分数与时间",
+        "evidence_features": [
+          "has_ball",
+          "has_score",
+          "has_team",
+          "has_match",
+          "has_timer"
+        ]
+      },
+      {
+        "title": "结束比赛并结算结果",
+        "text": "结束比赛并结算结果",
+        "evidence_features": [
+          "has_ball",
+          "has_score",
+          "has_team",
+          "has_match",
+          "has_timer"
+        ]
+      }
+    ]
+  },
+  "module_rules": {
+    "sports": [
+      {
+        "module": "Score And Match Controller",
+        "responsibility": "承载比分和比赛流程",
+        "terms": [
+          "score",
+          "match",
+          "timer"
+        ]
+      },
+      {
+        "module": "Team Logic",
+        "responsibility": "承载队伍与球员行为",
+        "terms": [
+          "team",
+          "player"
+        ]
+      }
+    ]
+  },
+  "compatible_with": [
+    "multiplayer",
+    "simulation"
+  ],
+  "suppresses": []
+}

@@ -1,0 +1,171 @@
+{
+  "schema_version": "layer4_profile.v2",
+  "profile_id": "racing",
+  "profile_layer": "primary",
+  "display_name": "Racing",
+  "identity_rules": {
+    "racing": {
+      "threshold": 0.5,
+      "summary": "以速度、载具、赛道和计时为核心的竞速游戏。",
+      "secondary_types": [
+        "vehicle_driven",
+        "lap_based",
+        "speed_competition"
+      ],
+      "feature_weights": {
+        "has_speed": 0.3,
+        "has_vehicle": 0.25,
+        "has_track": 0.2,
+        "has_lap": 0.15,
+        "has_timer": 0.1
+      }
+    }
+  },
+  "feature_rules": {
+    "has_speed": {
+      "positive_terms": [
+        "speed"
+      ],
+      "node_kinds": [
+        "Script",
+        "UI",
+        "Node"
+      ],
+      "weights": {
+        "racing": 0.3
+      }
+    },
+    "has_vehicle": {
+      "positive_terms": [
+        "car",
+        "vehicle",
+        "kart"
+      ],
+      "node_kinds": [
+        "Scene",
+        "Node",
+        "Script"
+      ],
+      "weights": {
+        "racing": 0.25
+      }
+    },
+    "has_track": {
+      "positive_terms": [
+        "track",
+        "circuit"
+      ],
+      "node_kinds": [
+        "Scene",
+        "Node"
+      ],
+      "weights": {
+        "racing": 0.2
+      }
+    },
+    "has_lap": {
+      "positive_terms": [
+        "lap"
+      ],
+      "node_kinds": [
+        "Script",
+        "UI",
+        "Node"
+      ],
+      "weights": {
+        "racing": 0.15
+      }
+    },
+    "has_timer": {
+      "positive_terms": [
+        "timer",
+        "checkpoint"
+      ],
+      "node_kinds": [
+        "Node",
+        "Script",
+        "UI"
+      ],
+      "weights": {
+        "racing": 0.1
+      }
+    }
+  },
+  "negative_weights": {},
+  "gameplay_loop_templates": {
+    "racing": [
+      {
+        "title": "开始比赛",
+        "text": "开始比赛",
+        "evidence_features": [
+          "has_speed",
+          "has_vehicle",
+          "has_track",
+          "has_lap",
+          "has_timer"
+        ]
+      },
+      {
+        "title": "控制载具通过赛道",
+        "text": "控制载具通过赛道",
+        "evidence_features": [
+          "has_speed",
+          "has_vehicle",
+          "has_track",
+          "has_lap",
+          "has_timer"
+        ]
+      },
+      {
+        "title": "累计圈数和时间",
+        "text": "累计圈数和时间",
+        "evidence_features": [
+          "has_speed",
+          "has_vehicle",
+          "has_track",
+          "has_lap",
+          "has_timer"
+        ]
+      },
+      {
+        "title": "冲线结算名次",
+        "text": "冲线结算名次",
+        "evidence_features": [
+          "has_speed",
+          "has_vehicle",
+          "has_track",
+          "has_lap",
+          "has_timer"
+        ]
+      }
+    ]
+  },
+  "module_rules": {
+    "racing": [
+      {
+        "module": "Vehicle Controller",
+        "responsibility": "承载载具移动与转向",
+        "terms": [
+          "car",
+          "vehicle",
+          "speed"
+        ]
+      },
+      {
+        "module": "Race Progression",
+        "responsibility": "承载圈数、检查点与计时",
+        "terms": [
+          "lap",
+          "checkpoint",
+          "timer"
+        ]
+      }
+    ]
+  },
+  "compatible_with": [
+    "multiplayer",
+    "sports",
+    "simulation"
+  ],
+  "suppresses": []
+}

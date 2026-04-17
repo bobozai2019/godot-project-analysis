@@ -1,0 +1,204 @@
+{
+  "schema_version": "layer4_profile.v2",
+  "profile_id": "tactical",
+  "profile_layer": "primary",
+  "display_name": "Tactical",
+  "identity_rules": {
+    "tactical": {
+      "threshold": 0.5,
+      "summary": "以网格、单位选择与命令执行为核心的战术策略游戏。",
+      "secondary_types": [
+        "turn_based",
+        "command_driven",
+        "grid_based"
+      ],
+      "required_features": [
+        "has_command"
+      ],
+      "feature_weights": {
+        "has_grid": 0.3,
+        "has_command": 0.25,
+        "has_select": 0.2,
+        "has_turn": 0.15,
+        "has_range": 0.1
+      }
+    }
+  },
+  "feature_rules": {
+    "has_grid": {
+      "positive_terms": [
+        "grid",
+        "tile",
+        "cell",
+        "hex"
+      ],
+      "node_kinds": [
+        "Scene",
+        "Node",
+        "Script"
+      ],
+      "weights": {
+        "tactical": 0.3
+      }
+    },
+    "has_command": {
+      "positive_terms": [
+        "command",
+        "move_command",
+        "attack_command",
+        "execute"
+      ],
+      "node_kinds": [
+        "Script"
+      ],
+      "weights": {
+        "tactical": 0.25
+      }
+    },
+    "has_select": {
+      "positive_terms": [
+        "select",
+        "selected",
+        "target",
+        "cursor"
+      ],
+      "node_kinds": [
+        "Scene",
+        "Node",
+        "Script"
+      ],
+      "weights": {
+        "tactical": 0.2
+      }
+    },
+    "has_turn": {
+      "positive_terms": [
+        "turn",
+        "end_turn",
+        "phase",
+        "round"
+      ],
+      "node_kinds": [
+        "Script",
+        "Node"
+      ],
+      "weights": {
+        "tactical": 0.15
+      }
+    },
+    "has_range": {
+      "positive_terms": [
+        "range",
+        "highlight",
+        "reticle"
+      ],
+      "node_kinds": [
+        "Scene",
+        "Node",
+        "Script"
+      ],
+      "weights": {
+        "tactical": 0.1
+      }
+    }
+  },
+  "negative_weights": {
+    "has_direct_platformer_motion": -0.1
+  },
+  "gameplay_loop_templates": {
+    "tactical": [
+      {
+        "title": "观察地图与单位状态",
+        "text": "观察地图与单位状态",
+        "evidence_features": [
+          "has_grid",
+          "has_command",
+          "has_select",
+          "has_turn",
+          "has_range"
+        ]
+      },
+      {
+        "title": "选择单位或格子",
+        "text": "选择单位或格子",
+        "evidence_features": [
+          "has_grid",
+          "has_command",
+          "has_select",
+          "has_turn",
+          "has_range"
+        ]
+      },
+      {
+        "title": "查看范围与目标",
+        "text": "查看范围与目标",
+        "evidence_features": [
+          "has_grid",
+          "has_command",
+          "has_select",
+          "has_turn",
+          "has_range"
+        ]
+      },
+      {
+        "title": "下达行动命令",
+        "text": "下达行动命令",
+        "evidence_features": [
+          "has_grid",
+          "has_command",
+          "has_select",
+          "has_turn",
+          "has_range"
+        ]
+      },
+      {
+        "title": "结算并推进回合",
+        "text": "结算并推进回合",
+        "evidence_features": [
+          "has_grid",
+          "has_command",
+          "has_select",
+          "has_turn",
+          "has_range"
+        ]
+      }
+    ]
+  },
+  "module_rules": {
+    "tactical": [
+      {
+        "module": "Grid System",
+        "responsibility": "承载地图格与空间约束",
+        "terms": [
+          "grid",
+          "tile",
+          "cell"
+        ]
+      },
+      {
+        "module": "Command System",
+        "responsibility": "承载行动命令与执行",
+        "terms": [
+          "command",
+          "execute"
+        ]
+      },
+      {
+        "module": "Targeting And Range",
+        "responsibility": "承载目标选择与高亮",
+        "terms": [
+          "target",
+          "range",
+          "highlight"
+        ]
+      }
+    ]
+  },
+  "compatible_with": [
+    "management",
+    "story",
+    "multiplayer",
+    "rpg"
+  ],
+  "suppresses": []
+}

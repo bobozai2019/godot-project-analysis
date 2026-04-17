@@ -1,0 +1,206 @@
+{
+  "schema_version": "layer4_profile.v2",
+  "profile_id": "rpg",
+  "profile_layer": "primary",
+  "display_name": "RPG",
+  "identity_rules": {
+    "rpg": {
+      "threshold": 0.5,
+      "summary": "角色成长、任务推进与属性驱动的角色扮演游戏。",
+      "secondary_types": [
+        "character_progression",
+        "quest_driven",
+        "stat_driven"
+      ],
+      "feature_weights": {
+        "has_inventory": 0.2,
+        "has_stats": 0.2,
+        "has_quest": 0.2,
+        "has_equipment": 0.2,
+        "has_level": 0.2
+      }
+    }
+  },
+  "feature_rules": {
+    "has_inventory": {
+      "positive_terms": [
+        "inventory",
+        "bag",
+        "item"
+      ],
+      "node_kinds": [
+        "Scene",
+        "Node",
+        "Script",
+        "Resource"
+      ],
+      "weights": {
+        "rpg": 0.2
+      }
+    },
+    "has_stats": {
+      "positive_terms": [
+        "hp",
+        "mana",
+        "exp",
+        "stats"
+      ],
+      "node_kinds": [
+        "Script",
+        "Resource",
+        "Node"
+      ],
+      "weights": {
+        "rpg": 0.2
+      }
+    },
+    "has_quest": {
+      "positive_terms": [
+        "quest",
+        "npc",
+        "dialogue",
+        "mission"
+      ],
+      "node_kinds": [
+        "Scene",
+        "Script",
+        "Node"
+      ],
+      "weights": {
+        "rpg": 0.2
+      }
+    },
+    "has_equipment": {
+      "positive_terms": [
+        "weapon",
+        "armor",
+        "equipment",
+        "gear"
+      ],
+      "node_kinds": [
+        "Scene",
+        "Script",
+        "Resource"
+      ],
+      "weights": {
+        "rpg": 0.2
+      }
+    },
+    "has_level": {
+      "positive_terms": [
+        "level",
+        "exp",
+        "skill_tree"
+      ],
+      "node_kinds": [
+        "Script",
+        "Resource",
+        "Node"
+      ],
+      "weights": {
+        "rpg": 0.2
+      }
+    }
+  },
+  "negative_weights": {
+    "has_card_loop": -0.15
+  },
+  "gameplay_loop_templates": {
+    "rpg": [
+      {
+        "title": "探索世界或区域",
+        "text": "探索世界或区域",
+        "evidence_features": [
+          "has_inventory",
+          "has_stats",
+          "has_quest",
+          "has_equipment",
+          "has_level"
+        ]
+      },
+      {
+        "title": "与 NPC / 事件 / 任务交互",
+        "text": "与 NPC / 事件 / 任务交互",
+        "evidence_features": [
+          "has_inventory",
+          "has_stats",
+          "has_quest",
+          "has_equipment",
+          "has_level"
+        ]
+      },
+      {
+        "title": "获得物品、经验或剧情推进",
+        "text": "获得物品、经验或剧情推进",
+        "evidence_features": [
+          "has_inventory",
+          "has_stats",
+          "has_quest",
+          "has_equipment",
+          "has_level"
+        ]
+      },
+      {
+        "title": "管理角色、属性与装备",
+        "text": "管理角色、属性与装备",
+        "evidence_features": [
+          "has_inventory",
+          "has_stats",
+          "has_quest",
+          "has_equipment",
+          "has_level"
+        ]
+      },
+      {
+        "title": "进入战斗或继续探索",
+        "text": "进入战斗或继续探索",
+        "evidence_features": [
+          "has_inventory",
+          "has_stats",
+          "has_quest",
+          "has_equipment",
+          "has_level"
+        ]
+      }
+    ]
+  },
+  "module_rules": {
+    "rpg": [
+      {
+        "module": "Quest And Dialogue",
+        "responsibility": "承载任务与剧情推进",
+        "terms": [
+          "quest",
+          "dialogue",
+          "npc"
+        ]
+      },
+      {
+        "module": "Inventory And Equipment",
+        "responsibility": "承载物品持有、装备与使用",
+        "terms": [
+          "inventory",
+          "weapon",
+          "armor"
+        ]
+      },
+      {
+        "module": "Stats And Progression",
+        "responsibility": "承载等级、经验和角色成长",
+        "terms": [
+          "level",
+          "exp",
+          "stats"
+        ]
+      }
+    ]
+  },
+  "compatible_with": [
+    "story",
+    "multiplayer",
+    "survival",
+    "sandbox",
+    "roguelike"
+  ],
+  "suppresses": []
+}

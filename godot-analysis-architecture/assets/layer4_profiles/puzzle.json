@@ -1,0 +1,174 @@
+{
+  "schema_version": "layer4_profile.v2",
+  "profile_id": "puzzle",
+  "profile_layer": "primary",
+  "display_name": "Puzzle",
+  "identity_rules": {
+    "puzzle": {
+      "threshold": 0.5,
+      "summary": "以逻辑规则、开关、状态变化和谜题解法为核心的解谜游戏。",
+      "secondary_types": [
+        "logic_driven",
+        "state_based",
+        "trigger_puzzle"
+      ],
+      "required_features": [
+        "has_puzzle",
+        "has_logic"
+      ],
+      "feature_weights": {
+        "has_puzzle": 0.3,
+        "has_logic": 0.25,
+        "has_switch": 0.2,
+        "has_trigger": 0.15,
+        "has_state": 0.1
+      }
+    }
+  },
+  "feature_rules": {
+    "has_puzzle": {
+      "positive_terms": [
+        "puzzle",
+        "riddle"
+      ],
+      "node_kinds": [
+        "Scene",
+        "Node",
+        "Script"
+      ],
+      "weights": {
+        "puzzle": 0.3
+      }
+    },
+    "has_logic": {
+      "positive_terms": [
+        "solve"
+      ],
+      "node_kinds": [
+        "Script",
+        "Node"
+      ],
+      "weights": {
+        "puzzle": 0.25
+      }
+    },
+    "has_switch": {
+      "positive_terms": [
+        "switch",
+        "lever"
+      ],
+      "node_kinds": [
+        "Scene",
+        "Node",
+        "Script"
+      ],
+      "weights": {
+        "puzzle": 0.2
+      }
+    },
+    "has_trigger": {
+      "positive_terms": [
+        "trigger",
+        "pressure_plate"
+      ],
+      "node_kinds": [
+        "Scene",
+        "Node",
+        "Script"
+      ],
+      "weights": {
+        "puzzle": 0.15
+      }
+    },
+    "has_state": {
+      "positive_terms": [
+        "state",
+        "condition"
+      ],
+      "node_kinds": [
+        "Script",
+        "Resource"
+      ],
+      "weights": {
+        "puzzle": 0.1
+      }
+    }
+  },
+  "negative_weights": {},
+  "gameplay_loop_templates": {
+    "puzzle": [
+      {
+        "title": "观察环境与规则",
+        "text": "观察环境与规则",
+        "evidence_features": [
+          "has_puzzle",
+          "has_logic",
+          "has_switch",
+          "has_trigger",
+          "has_state"
+        ]
+      },
+      {
+        "title": "尝试交互或切换状态",
+        "text": "尝试交互或切换状态",
+        "evidence_features": [
+          "has_puzzle",
+          "has_logic",
+          "has_switch",
+          "has_trigger",
+          "has_state"
+        ]
+      },
+      {
+        "title": "验证结果与反馈",
+        "text": "验证结果与反馈",
+        "evidence_features": [
+          "has_puzzle",
+          "has_logic",
+          "has_switch",
+          "has_trigger",
+          "has_state"
+        ]
+      },
+      {
+        "title": "逐步解开谜题",
+        "text": "逐步解开谜题",
+        "evidence_features": [
+          "has_puzzle",
+          "has_logic",
+          "has_switch",
+          "has_trigger",
+          "has_state"
+        ]
+      }
+    ]
+  },
+  "module_rules": {
+    "puzzle": [
+      {
+        "module": "State Puzzle Controller",
+        "responsibility": "承载状态变换与条件判断",
+        "terms": [
+          "state",
+          "condition",
+          "logic"
+        ]
+      },
+      {
+        "module": "Switch And Trigger",
+        "responsibility": "承载玩家操作与谜题触发",
+        "terms": [
+          "switch",
+          "trigger",
+          "button"
+        ]
+      }
+    ]
+  },
+  "compatible_with": [
+    "story",
+    "platformer",
+    "horror"
+  ],
+  "suppresses": []
+}
