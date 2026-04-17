@@ -1,0 +1,1051 @@
+{
+  "artifact_type": "foundation_semantics",
+  "data": {
+    "AnimatedSprite2D": {
+      "category": "presentation",
+      "confidence": 0.85,
+      "importance": "high",
+      "roles": [
+        "animation_driver"
+      ],
+      "source": {
+        "kind": "manual_rule",
+        "rule_id": "class.presentation.1"
+      },
+      "systems": [
+        "Animation",
+        "Presentation"
+      ]
+    },
+    "AnimationPlayer": {
+      "category": "presentation",
+      "confidence": 0.9,
+      "importance": "high",
+      "roles": [
+        "animation_driver"
+      ],
+      "source": {
+        "kind": "manual_rule",
+        "rule_id": "class.presentation.1"
+      },
+      "systems": [
+        "Animation",
+        "Presentation"
+      ]
+    },
+    "Area2D": {
+      "category": "physics",
+      "confidence": 0.9,
+      "importance": "high",
+      "roles": [
+        "trigger_candidate"
+      ],
+      "source": {
+        "kind": "manual_rule",
+        "rule_id": "class.physics.1"
+      },
+      "systems": [
+        "Gameplay",
+        "Physics"
+      ]
+    },
+    "Area3D": {
+      "category": "physics",
+      "confidence": 0.9,
+      "importance": "high",
+      "roles": [
+        "trigger_candidate"
+      ],
+      "source": {
+        "kind": "manual_rule",
+        "rule_id": "class.physics.1"
+      },
+      "systems": [
+        "Gameplay",
+        "Physics"
+      ]
+    },
+    "AudioStreamPlayer": {
+      "category": "presentation",
+      "confidence": 0.9,
+      "importance": "high",
+      "roles": [
+        "audio_emitter"
+      ],
+      "source": {
+        "kind": "manual_rule",
+        "rule_id": "class.presentation.1"
+      },
+      "systems": [
+        "Audio",
+        "Presentation"
+      ]
+    },
+    "Button": {
+      "category": "ui_element",
+      "confidence": 0.95,
+      "importance": "high",
+      "roles": [
+        "ui_control"
+      ],
+      "source": {
+        "kind": "manual_rule",
+        "rule_id": "class.ui_element.1"
+      },
+      "systems": [
+        "UI"
+      ]
+    },
+    "Camera2D": {
+      "category": "presentation",
+      "confidence": 0.8,
+      "importance": "medium",
+      "roles": [
+        "camera_controller"
+      ],
+      "source": {
+        "kind": "manual_rule",
+        "rule_id": "class.presentation.1"
+      },
+      "systems": [
+        "Presentation"
+      ]
+    },
+    "Camera3D": {
+      "category": "presentation",
+      "confidence": 0.8,
+      "importance": "medium",
+      "roles": [
+        "camera_controller"
+      ],
+      "source": {
+        "kind": "manual_rule",
+        "rule_id": "class.presentation.1"
+      },
+      "systems": [
+        "Presentation"
+      ]
+    },
+    "CanvasLayer": {
+      "category": "ui_element",
+      "confidence": 0.95,
+      "importance": "high",
+      "roles": [
+        "ui_layer"
+      ],
+      "source": {
+        "kind": "manual_rule",
+        "rule_id": "class.ui_element.1"
+      },
+      "systems": [
+        "UI"
+      ]
+    },
+    "CharacterBody2D": {
+      "category": "gameplay_entity",
+      "confidence": 0.9,
+      "importance": "high",
+      "roles": [
+        "movable_actor",
+        "player_candidate",
+        "enemy_candidate"
+      ],
+      "source": {
+        "kind": "manual_rule",
+        "rule_id": "class.gameplay_entity.3"
+      },
+      "systems": [
+        "Gameplay",
+        "Physics"
+      ]
+    },
+    "CharacterBody3D": {
+      "category": "gameplay_entity",
+      "confidence": 0.9,
+      "importance": "high",
+      "roles": [
+        "movable_actor",
+        "player_candidate",
+        "enemy_candidate"
+      ],
+      "source": {
+        "kind": "manual_rule",
+        "rule_id": "class.gameplay_entity.3"
+      },
+      "systems": [
+        "Gameplay",
+        "Physics"
+      ]
+    },
+    "CheckButton": {
+      "category": "ui_element",
+      "confidence": 0.9,
+      "importance": "high",
+      "roles": [
+        "ui_control"
+      ],
+      "source": {
+        "kind": "manual_rule",
+        "rule_id": "class.ui_element.1"
+      },
+      "systems": [
+        "UI"
+      ]
+    },
+    "CenterContainer": {
+      "category": "ui_element",
+      "confidence": 0.85,
+      "importance": "high",
+      "roles": [
+        "layout_container"
+      ],
+      "source": {
+        "kind": "manual_rule",
+        "rule_id": "class.ui_element.1"
+      },
+      "systems": [
+        "UI"
+      ]
+    },
+    "CollisionShape2D": {
+      "category": "physics",
+      "confidence": 0.8,
+      "importance": "medium",
+      "roles": [
+        "collision_shape"
+      ],
+      "source": {
+        "kind": "manual_rule",
+        "rule_id": "class.physics.1"
+      },
+      "systems": [
+        "Physics"
+      ]
+    },
+    "CollisionShape3D": {
+      "category": "physics",
+      "confidence": 0.8,
+      "importance": "medium",
+      "roles": [
+        "collision_shape"
+      ],
+      "source": {
+        "kind": "manual_rule",
+        "rule_id": "class.physics.1"
+      },
+      "systems": [
+        "Physics"
+      ]
+    },
+    "ColorRect": {
+      "category": "ui_element",
+      "confidence": 0.85,
+      "importance": "high",
+      "roles": [
+        "ui_control",
+        "shape_visual"
+      ],
+      "source": {
+        "kind": "manual_rule",
+        "rule_id": "class.ui_element.1"
+      },
+      "systems": [
+        "UI",
+        "Presentation"
+      ]
+    },
+    "ConfigFile": {
+      "category": "data_resource",
+      "confidence": 0.85,
+      "importance": "high",
+      "roles": [
+        "data_container"
+      ],
+      "source": {
+        "kind": "manual_rule",
+        "rule_id": "class.data_resource.1"
+      },
+      "systems": [
+        "Data"
+      ]
+    },
+    "Container": {
+      "category": "ui_element",
+      "confidence": 0.85,
+      "importance": "high",
+      "roles": [
+        "ui_control"
+      ],
+      "source": {
+        "kind": "manual_rule",
+        "rule_id": "class.ui_element.1"
+      },
+      "systems": [
+        "UI"
+      ]
+    },
+    "Control": {
+      "category": "ui_element",
+      "confidence": 0.95,
+      "importance": "high",
+      "roles": [
+        "ui_control"
+      ],
+      "source": {
+        "kind": "manual_rule",
+        "rule_id": "class.ui_element.1"
+      },
+      "systems": [
+        "UI"
+      ]
+    },
+    "DirectionalLight3D": {
+      "category": "presentation",
+      "confidence": 0.75,
+      "importance": "medium",
+      "roles": [
+        "scene_instance"
+      ],
+      "source": {
+        "kind": "manual_rule",
+        "rule_id": "class.presentation.1"
+      },
+      "systems": [
+        "Presentation"
+      ]
+    },
+    "FileDialog": {
+      "category": "ui_element",
+      "confidence": 0.85,
+      "importance": "high",
+      "roles": [
+        "ui_control"
+      ],
+      "source": {
+        "kind": "manual_rule",
+        "rule_id": "class.ui_element.1"
+      },
+      "systems": [
+        "UI"
+      ]
+    },
+    "GPUParticles3D": {
+      "category": "presentation",
+      "confidence": 0.8,
+      "importance": "medium",
+      "roles": [
+        "shape_visual"
+      ],
+      "source": {
+        "kind": "manual_rule",
+        "rule_id": "class.presentation.1"
+      },
+      "systems": [
+        "Presentation"
+      ]
+    },
+    "GridContainer": {
+      "category": "ui_element",
+      "confidence": 0.85,
+      "importance": "high",
+      "roles": [
+        "layout_container"
+      ],
+      "source": {
+        "kind": "manual_rule",
+        "rule_id": "class.ui_element.1"
+      },
+      "systems": [
+        "UI"
+      ]
+    },
+    "HBoxContainer": {
+      "category": "ui_element",
+      "confidence": 0.85,
+      "importance": "high",
+      "roles": [
+        "layout_container"
+      ],
+      "source": {
+        "kind": "manual_rule",
+        "rule_id": "class.ui_element.1"
+      },
+      "systems": [
+        "UI"
+      ]
+    },
+    "HSeparator": {
+      "category": "ui_element",
+      "confidence": 0.8,
+      "importance": "medium",
+      "roles": [
+        "layout_container"
+      ],
+      "source": {
+        "kind": "manual_rule",
+        "rule_id": "class.ui_element.1"
+      },
+      "systems": [
+        "UI"
+      ]
+    },
+    "HSlider": {
+      "category": "ui_element",
+      "confidence": 0.85,
+      "importance": "high",
+      "roles": [
+        "ui_control"
+      ],
+      "source": {
+        "kind": "manual_rule",
+        "rule_id": "class.ui_element.1"
+      },
+      "systems": [
+        "UI"
+      ]
+    },
+    "JSON": {
+      "category": "data_resource",
+      "confidence": 0.75,
+      "importance": "medium",
+      "roles": [
+        "data_container"
+      ],
+      "source": {
+        "kind": "manual_rule",
+        "rule_id": "class.data_resource.1"
+      },
+      "systems": [
+        "Data"
+      ]
+    },
+    "Label": {
+      "category": "ui_element",
+      "confidence": 0.9,
+      "importance": "high",
+      "roles": [
+        "ui_control"
+      ],
+      "source": {
+        "kind": "manual_rule",
+        "rule_id": "class.ui_element.1"
+      },
+      "systems": [
+        "UI"
+      ]
+    },
+    "LineEdit": {
+      "category": "ui_element",
+      "confidence": 0.85,
+      "importance": "high",
+      "roles": [
+        "ui_control"
+      ],
+      "source": {
+        "kind": "manual_rule",
+        "rule_id": "class.ui_element.1"
+      },
+      "systems": [
+        "UI"
+      ]
+    },
+    "Line2D": {
+      "category": "presentation",
+      "confidence": 0.75,
+      "importance": "medium",
+      "roles": [
+        "shape_visual"
+      ],
+      "source": {
+        "kind": "manual_rule",
+        "rule_id": "class.presentation.1"
+      },
+      "systems": [
+        "Presentation"
+      ]
+    },
+    "MarginContainer": {
+      "category": "ui_element",
+      "confidence": 0.85,
+      "importance": "high",
+      "roles": [
+        "layout_container"
+      ],
+      "source": {
+        "kind": "manual_rule",
+        "rule_id": "class.ui_element.1"
+      },
+      "systems": [
+        "UI"
+      ]
+    },
+    "Marker2D": {
+      "category": "core_runtime",
+      "confidence": 0.75,
+      "importance": "medium",
+      "roles": [
+        "spawn_marker"
+      ],
+      "source": {
+        "kind": "manual_rule",
+        "rule_id": "class.core_runtime.1"
+      },
+      "systems": [
+        "Core",
+        "Gameplay"
+      ]
+    },
+    "MeshInstance3D": {
+      "category": "presentation",
+      "confidence": 0.8,
+      "importance": "medium",
+      "roles": [
+        "shape_visual"
+      ],
+      "source": {
+        "kind": "manual_rule",
+        "rule_id": "class.presentation.1"
+      },
+      "systems": [
+        "Presentation"
+      ]
+    },
+    "NavigationAgent2D": {
+      "category": "navigation",
+      "confidence": 0.85,
+      "importance": "high",
+      "roles": [
+        "navigation_agent"
+      ],
+      "source": {
+        "kind": "manual_rule",
+        "rule_id": "class.navigation.1"
+      },
+      "systems": [
+        "Navigation",
+        "Gameplay"
+      ]
+    },
+    "Node": {
+      "category": "core_runtime",
+      "confidence": 0.9,
+      "importance": "high",
+      "roles": [
+        "scene_tree_root",
+        "scene_instance"
+      ],
+      "source": {
+        "kind": "manual_rule",
+        "rule_id": "class.core_runtime.2"
+      },
+      "systems": [
+        "Core"
+      ]
+    },
+    "Node2D": {
+      "category": "gameplay_entity",
+      "confidence": 0.8,
+      "importance": "medium",
+      "roles": [
+        "scene_instance"
+      ],
+      "source": {
+        "kind": "manual_rule",
+        "rule_id": "class.gameplay_entity.1"
+      },
+      "systems": [
+        "Gameplay",
+        "Presentation"
+      ]
+    },
+    "Node3D": {
+      "category": "gameplay_entity",
+      "confidence": 0.8,
+      "importance": "medium",
+      "roles": [
+        "scene_instance"
+      ],
+      "source": {
+        "kind": "manual_rule",
+        "rule_id": "class.gameplay_entity.1"
+      },
+      "systems": [
+        "Gameplay",
+        "Presentation"
+      ]
+    },
+    "Object": {
+      "category": "core_runtime",
+      "confidence": 0.7,
+      "importance": "medium",
+      "roles": [
+        "scene_tree_root"
+      ],
+      "source": {
+        "kind": "manual_rule",
+        "rule_id": "class.core_runtime.1"
+      },
+      "systems": [
+        "Core"
+      ]
+    },
+    "PackedScene": {
+      "category": "data_resource",
+      "confidence": 0.9,
+      "importance": "high",
+      "roles": [
+        "scene_instance"
+      ],
+      "source": {
+        "kind": "manual_rule",
+        "rule_id": "class.data_resource.1"
+      },
+      "systems": [
+        "Core",
+        "Data"
+      ]
+    },
+    "Path2D": {
+      "category": "navigation",
+      "confidence": 0.75,
+      "importance": "medium",
+      "roles": [
+        "scene_instance"
+      ],
+      "source": {
+        "kind": "manual_rule",
+        "rule_id": "class.navigation.1"
+      },
+      "systems": [
+        "Gameplay",
+        "Navigation",
+        "Presentation"
+      ]
+    },
+    "PathFollow2D": {
+      "category": "navigation",
+      "confidence": 0.75,
+      "importance": "medium",
+      "roles": [
+        "scene_instance"
+      ],
+      "source": {
+        "kind": "manual_rule",
+        "rule_id": "class.navigation.1"
+      },
+      "systems": [
+        "Gameplay",
+        "Navigation",
+        "Presentation"
+      ]
+    },
+    "PackedSceneInstance": {
+      "category": "presentation",
+      "confidence": 0.75,
+      "importance": "medium",
+      "roles": [
+        "scene_instance"
+      ],
+      "source": {
+        "kind": "manual_rule",
+        "rule_id": "class.presentation.1"
+      },
+      "systems": [
+        "Presentation"
+      ]
+    },
+    "Panel": {
+      "category": "ui_element",
+      "confidence": 0.85,
+      "importance": "high",
+      "roles": [
+        "ui_control"
+      ],
+      "source": {
+        "kind": "manual_rule",
+        "rule_id": "class.ui_element.1"
+      },
+      "systems": [
+        "UI"
+      ]
+    },
+    "PanelContainer": {
+      "category": "ui_element",
+      "confidence": 0.85,
+      "importance": "high",
+      "roles": [
+        "ui_control",
+        "layout_container"
+      ],
+      "source": {
+        "kind": "manual_rule",
+        "rule_id": "class.ui_element.2"
+      },
+      "systems": [
+        "UI"
+      ]
+    },
+    "Polygon2D": {
+      "category": "presentation",
+      "confidence": 0.75,
+      "importance": "medium",
+      "roles": [
+        "shape_visual"
+      ],
+      "source": {
+        "kind": "manual_rule",
+        "rule_id": "class.presentation.1"
+      },
+      "systems": [
+        "Presentation"
+      ]
+    },
+    "ProgressBar": {
+      "category": "ui_element",
+      "confidence": 0.85,
+      "importance": "high",
+      "roles": [
+        "ui_control"
+      ],
+      "source": {
+        "kind": "manual_rule",
+        "rule_id": "class.ui_element.1"
+      },
+      "systems": [
+        "UI"
+      ]
+    },
+    "Resource": {
+      "category": "data_resource",
+      "confidence": 0.9,
+      "importance": "high",
+      "roles": [
+        "data_container"
+      ],
+      "source": {
+        "kind": "manual_rule",
+        "rule_id": "class.data_resource.1"
+      },
+      "systems": [
+        "Data"
+      ]
+    },
+    "RemoteTransform2D": {
+      "category": "core_runtime",
+      "confidence": 0.75,
+      "importance": "medium",
+      "roles": [
+        "scene_instance"
+      ],
+      "source": {
+        "kind": "manual_rule",
+        "rule_id": "class.core_runtime.1"
+      },
+      "systems": [
+        "Core",
+        "Presentation"
+      ]
+    },
+    "RichTextLabel": {
+      "category": "ui_element",
+      "confidence": 0.9,
+      "importance": "high",
+      "roles": [
+        "ui_control"
+      ],
+      "source": {
+        "kind": "manual_rule",
+        "rule_id": "class.ui_element.1"
+      },
+      "systems": [
+        "UI"
+      ]
+    },
+    "RigidBody2D": {
+      "category": "physics",
+      "confidence": 0.8,
+      "importance": "medium",
+      "roles": [
+        "movable_actor"
+      ],
+      "source": {
+        "kind": "manual_rule",
+        "rule_id": "class.physics.1"
+      },
+      "systems": [
+        "Gameplay",
+        "Physics"
+      ]
+    },
+    "SceneTree": {
+      "category": "manager",
+      "confidence": 0.9,
+      "importance": "high",
+      "roles": [
+        "scene_transition_driver"
+      ],
+      "source": {
+        "kind": "manual_rule",
+        "rule_id": "class.manager.1"
+      },
+      "systems": [
+        "Core",
+        "Manager"
+      ]
+    },
+    "ScrollContainer": {
+      "category": "ui_element",
+      "confidence": 0.85,
+      "importance": "high",
+      "roles": [
+        "layout_container"
+      ],
+      "source": {
+        "kind": "manual_rule",
+        "rule_id": "class.ui_element.1"
+      },
+      "systems": [
+        "UI"
+      ]
+    },
+    "SpinBox": {
+      "category": "ui_element",
+      "confidence": 0.85,
+      "importance": "high",
+      "roles": [
+        "ui_control"
+      ],
+      "source": {
+        "kind": "manual_rule",
+        "rule_id": "class.ui_element.1"
+      },
+      "systems": [
+        "UI"
+      ]
+    },
+    "Sprite2D": {
+      "category": "presentation",
+      "confidence": 0.75,
+      "importance": "medium",
+      "roles": [
+        "scene_instance"
+      ],
+      "source": {
+        "kind": "manual_rule",
+        "rule_id": "class.presentation.1"
+      },
+      "systems": [
+        "Presentation"
+      ]
+    },
+    "Sprite3D": {
+      "category": "presentation",
+      "confidence": 0.75,
+      "importance": "medium",
+      "roles": [
+        "scene_instance"
+      ],
+      "source": {
+        "kind": "manual_rule",
+        "rule_id": "class.presentation.1"
+      },
+      "systems": [
+        "Presentation"
+      ]
+    },
+    "StaticBody2D": {
+      "category": "physics",
+      "confidence": 0.8,
+      "importance": "medium",
+      "roles": [
+        "scene_instance"
+      ],
+      "source": {
+        "kind": "manual_rule",
+        "rule_id": "class.physics.1"
+      },
+      "systems": [
+        "Gameplay",
+        "Physics"
+      ]
+    },
+    "StaticBody3D": {
+      "category": "physics",
+      "confidence": 0.8,
+      "importance": "medium",
+      "roles": [
+        "scene_instance"
+      ],
+      "source": {
+        "kind": "manual_rule",
+        "rule_id": "class.physics.1"
+      },
+      "systems": [
+        "Gameplay",
+        "Physics"
+      ]
+    },
+    "SubViewport": {
+      "category": "core_runtime",
+      "confidence": 0.8,
+      "importance": "medium",
+      "roles": [
+        "scene_instance"
+      ],
+      "source": {
+        "kind": "manual_rule",
+        "rule_id": "class.core_runtime.1"
+      },
+      "systems": [
+        "Core",
+        "Presentation"
+      ]
+    },
+    "TextureButton": {
+      "category": "ui_element",
+      "confidence": 0.9,
+      "importance": "high",
+      "roles": [
+        "ui_control"
+      ],
+      "source": {
+        "kind": "manual_rule",
+        "rule_id": "class.ui_element.1"
+      },
+      "systems": [
+        "UI",
+        "Presentation"
+      ]
+    },
+    "TextureProgressBar": {
+      "category": "ui_element",
+      "confidence": 0.85,
+      "importance": "high",
+      "roles": [
+        "ui_control"
+      ],
+      "source": {
+        "kind": "manual_rule",
+        "rule_id": "class.ui_element.1"
+      },
+      "systems": [
+        "UI",
+        "Presentation"
+      ]
+    },
+    "TextureRect": {
+      "category": "ui_element",
+      "confidence": 0.85,
+      "importance": "high",
+      "roles": [
+        "ui_control"
+      ],
+      "source": {
+        "kind": "manual_rule",
+        "rule_id": "class.ui_element.1"
+      },
+      "systems": [
+        "UI",
+        "Presentation"
+      ]
+    },
+    "TileMapLayer": {
+      "category": "presentation",
+      "confidence": 0.8,
+      "importance": "medium",
+      "roles": [
+        "scene_instance",
+        "shape_visual"
+      ],
+      "source": {
+        "kind": "manual_rule",
+        "rule_id": "class.presentation.1"
+      },
+      "systems": [
+        "Gameplay",
+        "Presentation"
+      ]
+    },
+    "TileMap": {
+      "category": "presentation",
+      "confidence": 0.75,
+      "importance": "medium",
+      "roles": [
+        "scene_instance"
+      ],
+      "source": {
+        "kind": "manual_rule",
+        "rule_id": "class.presentation.1"
+      },
+      "systems": [
+        "Gameplay",
+        "Presentation"
+      ]
+    },
+    "Timer": {
+      "category": "manager",
+      "confidence": 0.75,
+      "importance": "medium",
+      "roles": [
+        "global_service"
+      ],
+      "source": {
+        "kind": "manual_rule",
+        "rule_id": "class.manager.1"
+      },
+      "systems": [
+        "Core",
+        "Manager"
+      ]
+    },
+    "VBoxContainer": {
+      "category": "ui_element",
+      "confidence": 0.85,
+      "importance": "high",
+      "roles": [
+        "layout_container"
+      ],
+      "source": {
+        "kind": "manual_rule",
+        "rule_id": "class.ui_element.1"
+      },
+      "systems": [
+        "UI"
+      ]
+    },
+    "VSeparator": {
+      "category": "ui_element",
+      "confidence": 0.8,
+      "importance": "medium",
+      "roles": [
+        "layout_container"
+      ],
+      "source": {
+        "kind": "manual_rule",
+        "rule_id": "class.ui_element.1"
+      },
+      "systems": [
+        "UI"
+      ]
+    },
+    "VSplitContainer": {
+      "category": "ui_element",
+      "confidence": 0.85,
+      "importance": "high",
+      "roles": [
+        "layout_container"
+      ],
+      "source": {
+        "kind": "manual_rule",
+        "rule_id": "class.ui_element.1"
+      },
+      "systems": [
+        "UI"
+      ]
+    }
+  },
+  "generated_at": "2026-04-15T17:10:20+00:00",
+  "generator": "godot-analysis-foundation",
+  "godot_version": "4.x",
+  "schema_version": "0.1.0"
+}

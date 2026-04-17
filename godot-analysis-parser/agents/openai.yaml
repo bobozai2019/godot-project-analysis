@@ -1,0 +1,4 @@
+interface:
+  display_name: "Godot Parser Analysis"
+  short_description: "Extract Godot Layer 1 static facts"
+  default_prompt: "Use $godot-analysis-parser to extract Layer 1 static facts from a Godot project."

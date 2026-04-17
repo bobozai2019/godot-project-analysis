@@ -1,0 +1,52 @@
+{
+  "artifact_type": "role_taxonomy",
+  "data": {
+    "categories": {
+      "core_runtime": "Base Godot runtime and tree coordination primitives.",
+      "data_resource": "Data-bearing resource or external configuration surface.",
+      "gameplay_entity": "World actor or interactive entity participating in gameplay.",
+      "manager": "Global or shared coordinator for flow, state, services, or resources.",
+      "navigation": "Pathfinding and navigation support.",
+      "physics": "Collision, movement, trigger, or physics participation.",
+      "presentation": "Visual, audio, camera, or animation presentation support.",
+      "ui_element": "Player-facing interface element or UI layer."
+    },
+    "roles": [
+      "scene_tree_root",
+      "scene_instance",
+      "movable_actor",
+      "player_candidate",
+      "enemy_candidate",
+      "trigger_candidate",
+      "ui_layer",
+      "ui_control",
+      "global_service",
+      "scene_transition_driver",
+      "data_container",
+      "animation_driver",
+      "audio_emitter",
+      "camera_controller",
+      "navigation_agent",
+      "spawn_marker",
+      "layout_container",
+      "shape_visual",
+      "collision_shape"
+    ],
+    "systems": [
+      "Core",
+      "Gameplay",
+      "UI",
+      "Manager",
+      "Data",
+      "Audio",
+      "Animation",
+      "Physics",
+      "Navigation",
+      "Presentation"
+    ]
+  },
+  "generated_at": "2026-04-15T17:10:20+00:00",
+  "generator": "godot-analysis-foundation",
+  "godot_version": "4.x",
+  "schema_version": "0.1.0"
+}

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Godot Graph Analysis"
+  short_description: "Build Layer 2 Godot relationship graph"
+  default_prompt: "Use $godot-analysis-graph to build and validate a Layer 2 relationship graph from Godot Layer 1 artifacts."

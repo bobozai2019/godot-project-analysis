@@ -1,0 +1,4 @@
+interface:
+  display_name: "Godot Foundation Analysis"
+  short_description: "Build Godot Layer 0 semantic artifacts"
+  default_prompt: "Use $godot-analysis-foundation to build and validate Layer 0 Godot semantic foundation artifacts."

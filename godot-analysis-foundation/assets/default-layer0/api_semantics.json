@@ -1,0 +1,309 @@
+{
+  "artifact_type": "api_semantics",
+  "data": {
+    "Input.is_action_just_pressed": {
+      "confidence": 0.9,
+      "semantic": "discrete_input_query",
+      "source": {
+        "kind": "manual_rule",
+        "rule_id": "api.discrete_input_query"
+      },
+      "systems": [
+        "Gameplay",
+        "UI"
+      ]
+    },
+    "Input.is_action_pressed": {
+      "confidence": 0.9,
+      "semantic": "continuous_input_query",
+      "source": {
+        "kind": "manual_rule",
+        "rule_id": "api.continuous_input_query"
+      },
+      "systems": [
+        "Gameplay"
+      ]
+    },
+    "ResourceLoader.load": {
+      "confidence": 0.85,
+      "semantic": "dynamic_resource_reference",
+      "source": {
+        "kind": "manual_rule",
+        "rule_id": "api.dynamic_resource_reference"
+      },
+      "systems": [
+        "Core",
+        "Data"
+      ]
+    },
+    "_input": {
+      "confidence": 0.85,
+      "semantic": "input_handling",
+      "source": {
+        "kind": "manual_rule",
+        "rule_id": "api.input_handling"
+      },
+      "systems": [
+        "Gameplay",
+        "UI"
+      ]
+    },
+    "_physics_process": {
+      "confidence": 0.9,
+      "semantic": "physics_update",
+      "source": {
+        "kind": "manual_rule",
+        "rule_id": "api.physics_update"
+      },
+      "systems": [
+        "Gameplay",
+        "Physics"
+      ]
+    },
+    "_process": {
+      "confidence": 0.8,
+      "semantic": "frame_update",
+      "source": {
+        "kind": "manual_rule",
+        "rule_id": "api.frame_update"
+      },
+      "systems": [
+        "Core",
+        "Gameplay"
+      ]
+    },
+    "_ready": {
+      "confidence": 0.85,
+      "semantic": "lifecycle_initialization",
+      "source": {
+        "kind": "manual_rule",
+        "rule_id": "api.lifecycle_initialization"
+      },
+      "systems": [
+        "Core"
+      ]
+    },
+    "_unhandled_input": {
+      "confidence": 0.85,
+      "semantic": "input_handling",
+      "source": {
+        "kind": "manual_rule",
+        "rule_id": "api.input_handling"
+      },
+      "systems": [
+        "Gameplay",
+        "UI"
+      ]
+    },
+    "add_child": {
+      "confidence": 0.9,
+      "semantic": "runtime_scene_tree_mutation",
+      "source": {
+        "kind": "manual_rule",
+        "rule_id": "api.runtime_scene_tree_mutation"
+      },
+      "systems": [
+        "Core"
+      ]
+    },
+    "add_to_group": {
+      "confidence": 0.85,
+      "semantic": "group_membership",
+      "source": {
+        "kind": "manual_rule",
+        "rule_id": "api.group_membership"
+      },
+      "systems": [
+        "Core"
+      ]
+    },
+    "call_group": {
+      "confidence": 0.85,
+      "semantic": "group_broadcast",
+      "source": {
+        "kind": "manual_rule",
+        "rule_id": "api.group_broadcast"
+      },
+      "systems": [
+        "Core",
+        "Manager"
+      ]
+    },
+    "change_scene_to_file": {
+      "confidence": 0.95,
+      "semantic": "scene_transition",
+      "source": {
+        "kind": "manual_rule",
+        "rule_id": "api.scene_transition"
+      },
+      "systems": [
+        "Core",
+        "Manager"
+      ]
+    },
+    "change_scene_to_packed": {
+      "confidence": 0.95,
+      "semantic": "scene_transition",
+      "source": {
+        "kind": "manual_rule",
+        "rule_id": "api.scene_transition"
+      },
+      "systems": [
+        "Core",
+        "Manager"
+      ]
+    },
+    "connect": {
+      "confidence": 0.9,
+      "semantic": "event_subscription",
+      "source": {
+        "kind": "manual_rule",
+        "rule_id": "api.event_subscription"
+      },
+      "systems": [
+        "Core"
+      ]
+    },
+    "disconnect": {
+      "confidence": 0.8,
+      "semantic": "event_subscription_removed",
+      "source": {
+        "kind": "manual_rule",
+        "rule_id": "api.event_subscription_removed"
+      },
+      "systems": [
+        "Core"
+      ]
+    },
+    "emit_signal": {
+      "confidence": 0.9,
+      "semantic": "event_emission",
+      "source": {
+        "kind": "manual_rule",
+        "rule_id": "api.event_emission"
+      },
+      "systems": [
+        "Core"
+      ]
+    },
+    "find_child": {
+      "confidence": 0.75,
+      "semantic": "node_lookup",
+      "source": {
+        "kind": "manual_rule",
+        "rule_id": "api.node_lookup"
+      },
+      "systems": [
+        "Core"
+      ]
+    },
+    "get_node": {
+      "confidence": 0.8,
+      "semantic": "node_lookup",
+      "source": {
+        "kind": "manual_rule",
+        "rule_id": "api.node_lookup"
+      },
+      "systems": [
+        "Core"
+      ]
+    },
+    "get_nodes_in_group": {
+      "confidence": 0.85,
+      "semantic": "group_query",
+      "source": {
+        "kind": "manual_rule",
+        "rule_id": "api.group_query"
+      },
+      "systems": [
+        "Core",
+        "Manager"
+      ]
+    },
+    "get_tree": {
+      "confidence": 0.85,
+      "semantic": "scene_tree_access",
+      "source": {
+        "kind": "manual_rule",
+        "rule_id": "api.scene_tree_access"
+      },
+      "systems": [
+        "Core",
+        "Manager"
+      ]
+    },
+    "instantiate": {
+      "confidence": 0.95,
+      "semantic": "dynamic_scene_creation",
+      "source": {
+        "kind": "manual_rule",
+        "rule_id": "api.dynamic_scene_creation"
+      },
+      "systems": [
+        "Core",
+        "Gameplay"
+      ]
+    },
+    "load": {
+      "confidence": 0.8,
+      "semantic": "dynamic_resource_reference",
+      "source": {
+        "kind": "manual_rule",
+        "rule_id": "api.dynamic_resource_reference"
+      },
+      "systems": [
+        "Core",
+        "Data"
+      ]
+    },
+    "preload": {
+      "confidence": 0.9,
+      "semantic": "static_resource_reference",
+      "source": {
+        "kind": "manual_rule",
+        "rule_id": "api.static_resource_reference"
+      },
+      "systems": [
+        "Core",
+        "Data"
+      ]
+    },
+    "queue_free": {
+      "confidence": 0.9,
+      "semantic": "runtime_lifetime_end",
+      "source": {
+        "kind": "manual_rule",
+        "rule_id": "api.runtime_lifetime_end"
+      },
+      "systems": [
+        "Core"
+      ]
+    },
+    "remove_child": {
+      "confidence": 0.8,
+      "semantic": "runtime_scene_tree_mutation",
+      "source": {
+        "kind": "manual_rule",
+        "rule_id": "api.runtime_scene_tree_mutation"
+      },
+      "systems": [
+        "Core"
+      ]
+    },
+    "signal": {
+      "confidence": 0.8,
+      "semantic": "event_contract",
+      "source": {
+        "kind": "manual_rule",
+        "rule_id": "api.event_contract"
+      },
+      "systems": [
+        "Core"
+      ]
+    }
+  },
+  "generated_at": "2026-04-15T17:10:20+00:00",
+  "generator": "godot-analysis-foundation",
+  "godot_version": "4.x",
+  "schema_version": "0.1.0"
+}

@@ -1,0 +1,94 @@
+{
+  "artifact_type": "pattern_rules",
+  "data": {
+    "dynamic_scene_creation": {
+      "confidence": 0.85,
+      "description": "PackedScene/resource reference followed by instantiation creates runtime scene flow.",
+      "required_api_semantics": [
+        "static_resource_reference",
+        "dynamic_scene_creation"
+      ],
+      "source": {
+        "kind": "manual_rule",
+        "rule_id": "pattern.dynamic_scene_creation"
+      },
+      "systems": [
+        "Core",
+        "Gameplay"
+      ]
+    },
+    "event_driven_ui": {
+      "confidence": 0.75,
+      "description": "UI controls connected to emitted gameplay events indicate event-driven UI.",
+      "required_api_semantics": [
+        "event_subscription",
+        "event_emission"
+      ],
+      "required_categories": [
+        "ui_element"
+      ],
+      "source": {
+        "kind": "manual_rule",
+        "rule_id": "pattern.event_driven_ui"
+      },
+      "systems": [
+        "UI"
+      ]
+    },
+    "global_manager": {
+      "confidence": 0.7,
+      "description": "Autoload-like node or script referenced across systems is likely a manager.",
+      "required_api_semantics": [
+        "scene_tree_access"
+      ],
+      "required_category": "manager",
+      "source": {
+        "kind": "manual_rule",
+        "rule_id": "pattern.global_manager"
+      },
+      "systems": [
+        "Manager"
+      ]
+    },
+    "player_controller_candidate": {
+      "confidence": 0.85,
+      "description": "Movable character with input polling is likely a player controller.",
+      "required_api_semantics": [
+        "continuous_input_query"
+      ],
+      "required_semantics": [
+        "movable_actor"
+      ],
+      "source": {
+        "kind": "manual_rule",
+        "rule_id": "pattern.player_controller_candidate"
+      },
+      "systems": [
+        "Gameplay"
+      ]
+    },
+    "trigger_system_candidate": {
+      "confidence": 0.8,
+      "description": "Area node with body-entered signal behavior is likely a trigger system.",
+      "required_api_semantics": [
+        "event_subscription"
+      ],
+      "required_classes": [
+        "Area2D",
+        "Area3D"
+      ],
+      "source": {
+        "kind": "manual_rule",
+        "rule_id": "pattern.trigger_system_candidate"
+      },
+      "systems": [
+        "Gameplay",
+        "Physics"
+      ]
+    }
+  },
+  "generated_at": "2026-04-15T17:10:20+00:00",
+  "generator": "godot-analysis-foundation",
+  "godot_version": "4.x",
+  "schema_version": "0.1.0"
+}

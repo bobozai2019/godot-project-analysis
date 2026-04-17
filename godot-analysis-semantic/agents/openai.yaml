@@ -1,0 +1,4 @@
+interface:
+  display_name: "Godot Semantic Analysis"
+  short_description: "Build Layer 3 Godot semantic artifacts"
+  default_prompt: "Use $godot-analysis-semantic to build Layer 3 semantic annotations and systems from Godot Layer 0 and Layer 2 artifacts."

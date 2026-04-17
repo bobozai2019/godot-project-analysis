@@ -1,0 +1,4 @@
+interface:
+  display_name: "Godot Architecture Recovery"
+  short_description: "Build Layer 4 Godot architecture reports"
+  default_prompt: "Use $godot-analysis-architecture to build Layer 4 architecture recovery reports from Godot Layer 2 and Layer 3 artifacts."
